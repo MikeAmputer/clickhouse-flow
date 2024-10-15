@@ -8,15 +8,15 @@ import {
     TableRow,
     Paper,
 } from '@mui/material';
-import { tableCellClasses } from '@mui/material/TableCell';
 import { styled } from '@mui/material/styles';
 import ChColumn, { ChColumnProps } from './ChColumn';
 
-const StyledTableCell = styled(TableCell)(({ theme }) => ({
-    [`&.${tableCellClasses.head}`]: {
-        backgroundColor: theme.palette.common.black,
-        color: theme.palette.common.white,
-    },
+const StyledTableHeadCell = styled(TableCell)(({ theme }) => ({
+    backgroundColor: '#000',
+    color: '#fff',
+    fontSize: 14,
+    textAlign: 'left',
+    padding: '5px',
 }));
 
 export type ChTableProps = {
@@ -30,8 +30,9 @@ const ChTable: React.FC<ChTableProps> = (table) => {
             <Table size={'small'}>
                 <TableHead>
                     <TableRow>
-                        <StyledTableCell>Name</StyledTableCell>
-                        <StyledTableCell>Type</StyledTableCell>
+                        <StyledTableHeadCell align="center" colSpan={2}>
+                            {table.name}
+                        </StyledTableHeadCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>

@@ -10,6 +10,7 @@ const cols1: ChColumnProps[] = [
 const cols2: ChColumnProps[] = [
   { position: 1, name: 'server_id_very_long_column_name', type: 'UInt64', defaultKind: '', defaultExpression: '' },
   { position: 2, name: 'user_id', type: 'UInt64', defaultKind: '', defaultExpression: '' },
+  { position: 3, name: 'time_very_long_column_name', type: 'DateTime64(\'UTC\', 3)', defaultKind: 'MATERIALIZED', defaultExpression: 'utcNow' },
 ];
 
 
@@ -17,8 +18,8 @@ export default function Home() {
   return (
     <div style={{ height: '100vh' }}>
       <ChFlow tableNodes={[
-        { table: { name: 'table1', columns: cols1 } },
-        { table: { name: 'table2', columns: cols2 } }
+        { table: { name: 'my_fancy_table_228', columns: cols1 } },
+        { table: { name: 'my_fancy_table_with_long_column_names', columns: cols2 } }
       ]} />
     </div>
   );
