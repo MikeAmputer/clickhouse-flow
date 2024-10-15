@@ -18,15 +18,13 @@ export type ChFlowProps = {
 }
 
 const ChFlow: React.FC<ChFlowProps> = ({ tableNodes }) => {
-    const nodeArray = [
-        {
-            id: '1',
-            type: 'ch-table',
-            data: { table: tableNodes[0].table },
-            style: { border: '1px solid #777', padding: 10 },
-            position: { x: 0, y: 0 },
-        }
-    ] satisfies Node[];
+    const nodeArray = tableNodes.map((node, index) => ({
+        id: node.table.name,
+        type: 'ch-table',
+        data: { table: node.table },
+        style: { border: '0px solid #777', padding: 2 },
+        position: { x: index * 250, y: 0 },
+    })) satisfies Node[];
 
     const [nodes, , onNodesChange] = useNodesState<CustomNodeType>(nodeArray);
 
