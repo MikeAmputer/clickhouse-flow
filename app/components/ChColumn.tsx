@@ -3,13 +3,20 @@ import {
     TableCell,
     TableRow,
 } from '@mui/material';
-import { tableCellClasses } from '@mui/material/TableCell';
 import { styled } from '@mui/material/styles';
 
-const StyledTableCell = styled(TableCell)(({ theme }) => ({
-    [`&.${tableCellClasses.body}`]: {
-        fontSize: 14,
-    },
+const NameTableCell = styled(TableCell)(({ theme }) => ({
+    fontSize: 14,
+    color: '#000',
+    textAlign: 'left',
+    padding: '5px',
+}));
+
+const TypeTableCell = styled(TableCell)(({ theme }) => ({
+    fontSize: 12,
+    color: '#888',
+    textAlign: 'right',
+    padding: '5px',
 }));
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
@@ -18,9 +25,6 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     },
     '&:nth-of-type(odd)': {
         backgroundColor: '#fffbd4',
-    },
-    '&:last-child td, &:last-child th': {
-        border: 0,
     },
 }));
 
@@ -35,8 +39,8 @@ export type ChColumnProps = {
 const ChColumn: React.FC<ChColumnProps> = (column) => {
     return (
         <StyledTableRow key={column.position}>
-            <StyledTableCell size={'small'}>{column.name}</StyledTableCell>
-            <StyledTableCell size={'small'}>{column.type}</StyledTableCell>
+            <NameTableCell>{column.name}</NameTableCell>
+            <TypeTableCell>{column.type}</TypeTableCell>
         </StyledTableRow>
     );
 };

@@ -1,15 +1,15 @@
-import { ChTableColumn } from './components/ChTable';
+import { ChColumnProps } from './components/ChColumn';
 import ChFlow from './components/ChFlow';
 
-const cols1: ChTableColumn[] = [
+const cols1: ChColumnProps[] = [
   { position: 1, name: 'server_id', type: 'UInt8', defaultKind: '', defaultExpression: '' },
   { position: 2, name: 'user_id', type: 'UInt32', defaultKind: '', defaultExpression: '' },
   { position: 3, name: 'order_id', type: 'UInt32', defaultKind: '', defaultExpression: '' },
 ];
 
-const cols2: ChTableColumn[] = [
-  { position: 1, name: 'server_id_2', type: 'UInt64', defaultKind: '', defaultExpression: '' },
-  { position: 2, name: 'user_id_2', type: 'UInt64', defaultKind: '', defaultExpression: '' },
+const cols2: ChColumnProps[] = [
+  { position: 1, name: 'server_id_very_long_column_name', type: 'UInt64', defaultKind: '', defaultExpression: '' },
+  { position: 2, name: 'user_id', type: 'UInt64', defaultKind: '', defaultExpression: '' },
 ];
 
 
