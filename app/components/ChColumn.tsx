@@ -38,7 +38,7 @@ export type ChColumnProps = {
 
 const ChColumn: React.FC<ChColumnProps> = (column) => {
     return (
-        <StyledTableRow key={column.position}>
+        <StyledTableRow>
             <NameTableCell>{column.name}</NameTableCell>
             <TypeTableCell>{column.type}</TypeTableCell>
         </StyledTableRow>

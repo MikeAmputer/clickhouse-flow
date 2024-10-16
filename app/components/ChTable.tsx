@@ -37,7 +37,7 @@ const ChTable: React.FC<ChTableProps> = (table) => {
                 </TableHead>
                 <TableBody>
                     {table.columns.map((column) => (
-                        <ChColumn {...column} />
+                        <ChColumn key={`${table.name}_${column.position}`} {...column} />
                     ))}
                 </TableBody>
             </Table>
