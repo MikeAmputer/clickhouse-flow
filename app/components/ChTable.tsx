@@ -77,11 +77,13 @@ const ChTable: React.FC<ChTableProps> = (table) => {
                         </ExpandCell>
                     </TableHeadRow>
                 </TableHead>
-                <TableBody>
-                    {table.columns.map((column) => (
-                        <ChColumn key={`${table.name}_${column.position}`} {...column} />
-                    ))}
-                </TableBody>
+                {open && (
+                    <TableBody>
+                        {table.columns.map((column) => (
+                            <ChColumn key={`${table.name}_${column.position}`} {...column} />
+                        ))}
+                    </TableBody>
+                )}
             </StyledTable>
         </TableContainer>
     );
