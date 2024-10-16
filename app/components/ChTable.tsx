@@ -46,6 +46,9 @@ const ExpandButton = styled(IconButton)(({ theme }) => ({
         backgroundColor: '#383838',
         color: '#fff',
     },
+    '&:active': {
+        transform: 'scale(0.95)',
+    },
 }));
 
 const TableHeadRow = styled(TableRow)(({ theme }) => ({
