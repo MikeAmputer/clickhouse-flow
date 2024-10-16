@@ -9,6 +9,8 @@ import {
     TableRow,
     Paper,
     IconButton,
+    Collapse,
+    Box,
 } from '@mui/material';
 
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
@@ -19,9 +21,9 @@ import { styled } from '@mui/material/styles';
 import ChColumn, { ChColumnProps } from './ChColumn';
 
 const StyledTable = styled(Table)(({ theme }) => ({
-    borderCollapse: "collapse",
+    borderCollapse: 'collapse',
     borderSpacing: 0,
-    background: "#000",
+    background: '#000',
 }));
 
 const TableNameCell = styled(TableCell)(({ theme }) => ({
@@ -62,7 +64,7 @@ const ChTable: React.FC<ChTableProps> = (table) => {
 
     return (
         <TableContainer component={Paper}>
-            <StyledTable size={'small'}>
+            <StyledTable size={'small'} aria-label="ch-table">
                 <TableHead>
                     <TableHeadRow>
                         <TableNameCell>{table.name}</TableNameCell>
@@ -77,13 +79,23 @@ const ChTable: React.FC<ChTableProps> = (table) => {
                         </ExpandCell>
                     </TableHeadRow>
                 </TableHead>
-                {open && (
-                    <TableBody>
-                        {table.columns.map((column) => (
-                            <ChColumn key={`${table.name}_${column.position}`} {...column} />
-                        ))}
-                    </TableBody>
-                )}
+                <TableBody>
+                    <TableRow>
+                        <TableCell style={{ paddingBottom: 0, paddingTop: 0, padding: 0 }} colSpan={2}>
+                            <Collapse in={open} timeout="auto" unmountOnExit>
+                                <Box>
+                                    <StyledTable size="small" aria-label="columns">
+                                        <TableBody>
+                                            {table.columns.map((column) => (
+                                                <ChColumn key={`${table.name}_${column.position}`} {...column} />
+                                            ))}
+                                        </TableBody>
+                                    </StyledTable>
+                                </Box>
+                            </Collapse>
+                        </TableCell>
+                    </TableRow>
+                </TableBody>
             </StyledTable>
         </TableContainer>
     );
