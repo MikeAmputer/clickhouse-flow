@@ -46,7 +46,7 @@ const ChFlow: React.FC<ChFlowProps> = ({ tableNodes }) => {
                     return '#fff';
                 }}
             />
-            <Controls />
+            <Controls style={{ color: '#000' }} />
         </ReactFlow>
     );
 };
