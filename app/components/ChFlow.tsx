@@ -15,16 +15,27 @@ import { nodeTypes, type CustomNodeType } from "../nodes";
 
 export type ChFlowProps = {
     tableNodes: ChTableNodeProps[];
+    transitions: [source: string, target: string][];
 }
 
-const ChFlow: React.FC<ChFlowProps> = ({ tableNodes }) => {
-    const nodeArray = tableNodes.map((node, index) => ({
-        id: node.table.name,
-        type: 'ch-table',
-        data: { table: node.table },
-        style: { border: '0px solid #777', padding: 3 },
-        position: { x: index * 250, y: 0 },
-    })) satisfies Node[];
+const ChFlow: React.FC<ChFlowProps> = ({ tableNodes, transitions }) => {
+    const calculateTableConnections = (tableName: string) => {
+        const inTables = transitions.filter(([_, target]) => target === tableName).length;
+        const outTables = transitions.filter(([source, _]) => source === tableName).length;
+        return { inTables, outTables };
+    };
+
+    const nodeArray = tableNodes.map((node, index) => {
+        const { inTables, outTables } = calculateTableConnections(node.table.name);
+
+        return {
+            id: node.table.name,
+            type: 'ch-table',
+            data: { table: node.table, inTables, outTables },
+            style: { border: '0px solid #777', padding: 3 },
+            position: { x: index * 250, y: 0 },
+        };
+    }) satisfies Node[];
 
     const [nodes, , onNodesChange] = useNodesState<CustomNodeType>(nodeArray);
 

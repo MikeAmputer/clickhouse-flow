@@ -13,14 +13,20 @@ const cols2: ChColumnProps[] = [
   { position: 3, name: 'time_very_long_column_name', type: 'DateTime64(\'UTC\', 3)', defaultKind: 'MATERIALIZED', defaultExpression: 'utcNow' },
 ];
 
+const transitions: [source: string, target: string][] = [
+  ['my_fancy_table_228', 'my_fancy_table_with_long_column_names'],
+];
 
 export default function Home() {
   return (
     <div style={{ height: '100vh' }}>
-      <ChFlow tableNodes={[
-        { table: { name: 'my_fancy_table_228', columns: cols1 } },
-        { table: { name: 'my_fancy_table_with_long_column_names', columns: cols2 } }
-      ]} />
+      <ChFlow
+        tableNodes={[
+          { table: { name: 'my_fancy_table_228', columns: cols1 } },
+          { table: { name: 'my_fancy_table_with_long_column_names', columns: cols2 } }
+        ]}
+        transitions={transitions}
+      />
     </div>
   );
 }
