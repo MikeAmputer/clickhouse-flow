@@ -2,6 +2,10 @@ import ChTable, { ChTableProps } from "./ChTable";
 import { Handle, Position } from '@xyflow/react';
 import type { Node, NodeProps } from "@xyflow/react";
 
+const calculateHandlePosition = (index: number, total: number) => {
+    return `${(index + 1) * (100 / (total + 1))}%`;
+};
+
 export type ChTableNodeProps = {
     table: ChTableProps;
     inTables?: number | null;
@@ -11,10 +15,6 @@ export type ChTableNodeProps = {
 export type ChTableNode = Node<ChTableNodeProps>;
 
 export default function ChTableNode({ data }: NodeProps<ChTableNode>) {
-    const calculateHandlePosition = (index: number, total: number) => {
-        return `${(index + 1) * (100 / (total + 1))}%`;
-    };
-
     return (
         <>
             {data.inTables != null && Array.from({ length: data.inTables }).map((_, index) => (
