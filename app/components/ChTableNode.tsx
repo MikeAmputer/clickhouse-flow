@@ -19,10 +19,10 @@ export default function ChTableNode({ data }: NodeProps<ChTableNode>) {
         <>
             {data.inTables != null && Array.from({ length: data.inTables }).map((_, index) => (
                 <Handle
-                    key={`${data.table}-in-${index}`}
+                    key={`${data.table.name}-in-${index}`}
+                    id={`${data.table.name}-in-${index}`}
                     type="target"
                     position={Position.Left}
-                    id={`left-${index}`}
                     style={{ top: calculateHandlePosition(index, data.inTables as number), background: '#555' }}
                     isConnectable={false}
                 />
@@ -32,10 +32,10 @@ export default function ChTableNode({ data }: NodeProps<ChTableNode>) {
 
             {data.outTables != null && Array.from({ length: data.outTables }).map((_, index) => (
                 <Handle
-                    key={`${data.table}-out-${index}`}
+                    key={`${data.table.name}-out-${index}`}
+                    id={`${data.table.name}-out-${index}`}
                     type="source"
                     position={Position.Right}
-                    id={`right-${index}`}
                     style={{ top: calculateHandlePosition(index, data.outTables as number), background: '#555' }}
                     isConnectable={false}
                 />

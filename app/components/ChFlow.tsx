@@ -3,6 +3,7 @@
 import {
     ReactFlow,
     Node,
+    Edge,
     useNodesState,
     MiniMap,
     Controls,
@@ -37,12 +38,34 @@ const ChFlow: React.FC<ChFlowProps> = ({ tableNodes, transitions }) => {
         };
     }) satisfies Node[];
 
+    const sourceIndexMap: Record<string, number> = {};
+    const targetIndexMap: Record<string, number> = {};
+
+    const edgeArray = transitions.map(([source, target], index) => {
+        const sourceIndex = sourceIndexMap[source] || 0;
+        sourceIndexMap[source] = sourceIndex + 1;
+
+        const targetIndex = targetIndexMap[target] || 0;
+        targetIndexMap[target] = targetIndex + 1;
+
+        return {
+            id: `edge-${index}`,
+            source,
+            sourceHandle: `${source}-out-${sourceIndex}`,
+            target,
+            targetHandle: `${target}-in-${targetIndex}`,
+            animated: true,
+            style: { stroke: '#000' },
+        };
+    }) satisfies Edge[];
+
     const [nodes, , onNodesChange] = useNodesState<CustomNodeType>(nodeArray);
 
     return (
         <ReactFlow
             style={{ background: '#e0e0dc' }}
             nodes={nodes}
+            edges={edgeArray}
             onNodesChange={onNodesChange}
             nodeTypes={nodeTypes}
             fitView
