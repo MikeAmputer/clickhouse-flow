@@ -2,6 +2,7 @@ import React from 'react';
 import {
     TableCell,
     TableRow,
+    Tooltip,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
@@ -75,10 +76,22 @@ const ChColumn: React.FC<ChColumnProps> = (column) => {
     const NameCell = isOdd ? OddNameTableCell : EvenNameTableCell;
     const TypeCell = isOdd ? OddTypeTableCell : EvenTypeTableCell;
 
+    const hasDefault = column.defaultKind || column.defaultExpression;
+
     return (
         <StyledTableRow>
             <NameCell>{column.name}</NameCell>
-            <TypeCell>{column.type}</TypeCell>
+            <TypeCell>
+                {hasDefault ? (
+                    <Tooltip title={`${column.defaultKind} ${column.defaultExpression}`}>
+                        <span style={{ textDecoration: 'underline', cursor: 'help' }}>
+                            {column.type}
+                        </span>
+                    </Tooltip>
+                ) : (
+                    <span>{column.type}</span>
+                )}
+            </TypeCell>
         </StyledTableRow>
     );
 };

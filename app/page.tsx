@@ -10,7 +10,7 @@ const cols1: ChColumnProps[] = [
 const cols2: ChColumnProps[] = [
   { position: 1, name: 'server_id_very_long_column_name', type: 'UInt64', defaultKind: '', defaultExpression: '' },
   { position: 2, name: 'user_id', type: 'UInt64', defaultKind: '', defaultExpression: '' },
-  { position: 3, name: 'time_very_long_column_name', type: 'DateTime64(\'UTC\', 3)', defaultKind: 'MATERIALIZED', defaultExpression: 'utcNow' },
+  { position: 3, name: 'time_very_long_column_name', type: 'DateTime64(\'UTC\', 3)', defaultKind: 'MATERIALIZED', defaultExpression: 'utcNow()' },
 ];
 
 const cols3: ChColumnProps[] = [
