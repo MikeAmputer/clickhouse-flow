@@ -68,6 +68,8 @@ const ChFlow: React.FC<ChFlowProps> = ({ tableNodes, transitions }) => {
             edges={edgeArray}
             onNodesChange={onNodesChange}
             nodeTypes={nodeTypes}
+            minZoom={0.1}
+            maxZoom={1}
             fitView
         >
             <MiniMap

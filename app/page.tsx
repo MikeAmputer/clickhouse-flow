@@ -1,40 +1,38 @@
-import { ChColumnProps } from './components/ChColumn';
 import ChFlow from './components/ChFlow';
+import { ChTableNodeProps } from './components/ChTableNode';
+import { ChConnectionSettings } from './db';
+import { getModel } from './db/model';
 
-const cols1: ChColumnProps[] = [
-  { position: 1, name: 'server_id', type: 'UInt8', defaultKind: '', defaultExpression: '' },
-  { position: 2, name: 'user_id', type: 'UInt32', defaultKind: '', defaultExpression: '' },
-  { position: 3, name: 'order_id', type: 'UInt32', defaultKind: '', defaultExpression: '' },
-];
+export default async function Home() {
+  const connectionSettings: ChConnectionSettings = {
+    url: "http://localhost:48123",
+    username: "developer",
+    password: "developer",
+  }
 
-const cols2: ChColumnProps[] = [
-  { position: 1, name: 'server_id_very_long_column_name', type: 'UInt64', defaultKind: '', defaultExpression: '' },
-  { position: 2, name: 'user_id', type: 'UInt64', defaultKind: '', defaultExpression: '' },
-  { position: 3, name: 'time_very_long_column_name', type: 'DateTime64(\'UTC\', 3)', defaultKind: 'MATERIALIZED', defaultExpression: 'utcNow()' },
-];
+  const model = await getModel(connectionSettings, ["flow_test"]);
 
-const cols3: ChColumnProps[] = [
-  { position: 1, name: 'server_id', type: 'UInt64', defaultKind: '', defaultExpression: '' },
-  { position: 2, name: 'user_id', type: 'UInt64', defaultKind: '', defaultExpression: '' },
-  { position: 3, name: 'time', type: 'DateTime64(\'UTC\', 3)', defaultKind: '', defaultExpression: '' },
-];
+  const tableNodes = model.getTables<ChTableNodeProps>((entry) => {
+    return {
+      table: {
+        name: entry.fullName,
+        columns: entry.columns.map(column => ({
+          position: column.position,
+          name: column.name,
+          type: column.type,
+          defaultKind: column.defaultKind,
+          defaultExpression: column.defaultExpression
+        }))
+      }
+    }
+  });
 
-const transitions: [source: string, target: string][] = [
-  ['my_fancy_table_228', 'my_fancy_table_with_long_column_names'],
-  ['my_fancy_table_228', 'my_fancy_table_with_long_column_names'],
-  ['my_fancy_table_with_long_column_names', 'my_fancy_table_3'],
-  ['my_fancy_table_with_long_column_names', 'my_fancy_table_3'],
-];
+  const transitions = model.getTransitions();
 
-export default function Home() {
   return (
     <div style={{ height: '100vh' }}>
       <ChFlow
-        tableNodes={[
-          { table: { name: 'my_fancy_table_228', columns: cols1 } },
-          { table: { name: 'my_fancy_table_with_long_column_names', columns: cols2 } },
-          { table: { name: 'my_fancy_table_3', columns: cols3 } },
-        ]}
+        tableNodes={tableNodes}
         transitions={transitions}
       />
     </div>
