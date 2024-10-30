@@ -23,7 +23,15 @@ export default async function Home() {
           defaultKind: column.defaultKind,
           defaultExpression: column.defaultExpression
         }))
-      }
+      },
+      width: Math.max(
+        entry.fullName.length,
+        entry.columns.reduce((max, column) => {
+          const currentLength = column.name.length + column.type.length;
+          return Math.max(max, currentLength);
+        }, 0)
+      ) * 10 + 20,
+      height: entry.columns.length * 20 + 40,
     }
   });
 

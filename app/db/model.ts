@@ -70,7 +70,11 @@ const composeFullTableName = (database: string, table: string): string => {
     return `${database}.${table}`;
 }
 
-const composeTransitions = (createCommand: string, fullName: string): TableTransition[] => {
+const composeTransitions = (
+    createCommand: string,
+    fullName: string,
+    includeJoins: boolean = false): TableTransition[] => {
+
     const toRegex = /TO\s+(?:`([^`]+)`|([a-zA-Z0-9_]+))\.(?:`([^`]+)`|([a-zA-Z0-9_]+))\s+/gi;
     const fromRegex = /FROM\s+(?:`([^`]+)`|([a-zA-Z0-9_]+))\.(?:`([^`]+)`|([a-zA-Z0-9_]+))(?:\s+|$)/gi;
     const joinRegex = /JOIN\s+(?:`([^`]+)`|([a-zA-Z0-9_]+))\.(?:`([^`]+)`|([a-zA-Z0-9_]+))\s+/gi;
@@ -87,16 +91,21 @@ const composeTransitions = (createCommand: string, fullName: string): TableTrans
             result.push(t);
         })
 
-    matchTransitions(createCommand, fullName, false, joinRegex)
-        .forEach((t) => {
-            result.push(t);
-        })
+    if (includeJoins) {
+        matchTransitions(createCommand, fullName, false, joinRegex)
+            .forEach((t) => {
+                result.push(t);
+            })
+    }
 
     return result;
 }
 
-const matchTransitions = (createCommand: string, fullName: string, isSource: boolean, regex: RegExp)
-    : TableTransition[] => {
+const matchTransitions = (
+    createCommand: string,
+    fullName: string,
+    isSource: boolean,
+    regex: RegExp): TableTransition[] => {
 
     const result: TableTransition[] = [];
 

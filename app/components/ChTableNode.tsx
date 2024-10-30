@@ -8,6 +8,8 @@ const calculateHandlePosition = (index: number, total: number) => {
 
 export type ChTableNodeProps = {
     table: ChTableProps;
+    width: number;
+    height: number;
     inTables?: number | null;
     outTables?: number | null;
 }

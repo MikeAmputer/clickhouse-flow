@@ -32,7 +32,7 @@ const ChFlow: React.FC<ChFlowProps> = ({ tableNodes, transitions }) => {
         return {
             id: node.table.name,
             type: 'ch-table',
-            data: { table: node.table, inTables, outTables },
+            data: { table: node.table, width: node.width, height: node.height, inTables, outTables },
             style: { border: '0px solid #777', padding: 3 },
             position: { x: index * 250, y: 0 },
         };
