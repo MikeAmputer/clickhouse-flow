@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@clickhouse/client": "^1.7.0",
+    "@dagrejs/dagre": "^1.1.4",
     "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",
     "@mui/icons-material": "^6.1.3",

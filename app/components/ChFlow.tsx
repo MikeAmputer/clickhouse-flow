@@ -2,22 +2,27 @@
 
 import {
     ReactFlow,
+    ReactFlowProvider,
     Node,
     Edge,
     useNodesState,
+    useReactFlow,
     MiniMap,
     Controls,
+    useNodesInitialized,
 } from '@xyflow/react';
 
 import '@xyflow/react/dist/style.css';
 
 import { ChTableNodeProps } from "./ChTableNode";
 import { nodeTypes, type CustomNodeType } from "../nodes";
+import { useEffect } from 'react';
+import dagre from '@dagrejs/dagre';
 
 export type ChFlowProps = {
     tableNodes: ChTableNodeProps[];
     transitions: [source: string, target: string][];
-}
+};
 
 const ChFlow: React.FC<ChFlowProps> = ({ tableNodes, transitions }) => {
     const calculateTableConnections = (tableName: string) => {
@@ -32,9 +37,9 @@ const ChFlow: React.FC<ChFlowProps> = ({ tableNodes, transitions }) => {
         return {
             id: node.table.name,
             type: 'ch-table',
-            data: { table: node.table, width: node.width, height: node.height, inTables, outTables },
+            data: { ...node, inTables, outTables },
             style: { border: '0px solid #777', padding: 3 },
-            position: { x: index * 250, y: 0 },
+            position: { x: 0, y: 0 },
         };
     }) satisfies Node[];
 
@@ -61,8 +66,45 @@ const ChFlow: React.FC<ChFlowProps> = ({ tableNodes, transitions }) => {
 
     const [nodes, , onNodesChange] = useNodesState<CustomNodeType>(nodeArray);
 
+    const reactFlowInstance = useReactFlow();
+    const nodesInitialized = useNodesInitialized({ includeHiddenNodes: false, });
+
+    useEffect(() => {
+        if (nodesInitialized) {
+            const nodes = reactFlowInstance.getNodes();
+
+            var dag = new dagre.graphlib.Graph({ directed: true });
+            dag.setGraph({ rankdir: 'LR', align: 'UL', nodesep: 100, ranksep: 100 });
+            dag.setDefaultEdgeLabel(() => { return {}; });
+
+            nodes.forEach(node => {
+                const bounds = reactFlowInstance.getNodesBounds([node]);
+                dag.setNode(node.id, { width: bounds.width, height: bounds.height });
+            });
+
+            transitions.forEach((edge) => {
+                dag.setEdge(edge[0], edge[1]);
+            });
+
+            dagre.layout(dag);
+
+            dag.nodes().forEach((name) => {
+                const dagNode = dag.node(name);
+                reactFlowInstance.updateNode(
+                    name,
+                    {
+                        position: {
+                            x: dagNode.x - dagNode.width / 2,
+                            y: dagNode.y - dagNode.height / 2
+                        }
+                    });
+            });
+        }
+    }, [nodesInitialized]);
+
     return (
         <ReactFlow
+            id='clickhouse-dag-flow'
             style={{ background: '#e0e0dc' }}
             nodes={nodes}
             edges={edgeArray}
@@ -70,7 +112,9 @@ const ChFlow: React.FC<ChFlowProps> = ({ tableNodes, transitions }) => {
             nodeTypes={nodeTypes}
             minZoom={0.1}
             maxZoom={1}
-            fitView
+            proOptions={{ hideAttribution: true }}
+            snapGrid={[50, 50]}
+            snapToGrid={true}
         >
             <MiniMap
                 nodeStrokeColor={(n) => {
@@ -87,4 +131,15 @@ const ChFlow: React.FC<ChFlowProps> = ({ tableNodes, transitions }) => {
     );
 };
 
-export default ChFlow;
+const ChFlowProvider: React.FC<ChFlowProps> = ({ tableNodes, transitions }) => {
+    return (
+        <ReactFlowProvider>
+            <ChFlow
+                tableNodes={tableNodes}
+                transitions={transitions}
+            />
+        </ReactFlowProvider>
+    );
+};
+
+export default ChFlowProvider;
