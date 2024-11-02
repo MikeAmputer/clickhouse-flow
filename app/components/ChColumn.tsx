@@ -65,7 +65,7 @@ export type ChColumnProps = {
     type: string;
     defaultKind: string;
     defaultExpression: string;
-}
+};
 
 const ChColumn: React.FC<ChColumnProps> = (column) => {
     const isOdd = column.position % 2 === 1;

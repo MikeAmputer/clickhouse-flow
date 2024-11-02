@@ -12,7 +12,7 @@ export type ChTable = {
     sortingKey: string;
     primaryKey: string;
     samplingKey: string;
-}
+};
 
 export const getTables = async (client: ClickHouseClient, databases: string[]): Promise<ChTable[]> => {
     const params = { 'databases': databases };
@@ -20,7 +20,7 @@ export const getTables = async (client: ClickHouseClient, databases: string[]): 
     const tables = await executeQuery<ChTable>(client, getTablesSql, params);
 
     return tables;
-}
+};
 
 const getTablesSql: string = `
 select

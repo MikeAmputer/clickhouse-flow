@@ -7,7 +7,7 @@ export type ChConnectionSettings = {
     url: string;
     username: string;
     password: string;
-}
+};
 
 export const createClient = (settings: ChConnectionSettings): ClickHouseClient => {
     return createChClient({
@@ -16,7 +16,7 @@ export const createClient = (settings: ChConnectionSettings): ClickHouseClient =
         username: settings.username,
         password: settings.password,
     });
-}
+};
 
 export const executeQuery = async <T>(client: ClickHouseClient, query: string, params?: Record<string, unknown>): Promise<T[]> => {
     const resultSet = await client.query({

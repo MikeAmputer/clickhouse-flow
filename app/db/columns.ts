@@ -8,7 +8,7 @@ export type ChColumn = {
     position: number;
     defaultKind: string;
     defaultExpression: string;
-}
+};
 
 export const getColumns = async (client: ClickHouseClient, databases: string[]): Promise<ChColumn[]> => {
     const params = { 'databases': databases };
@@ -16,7 +16,7 @@ export const getColumns = async (client: ClickHouseClient, databases: string[]):
     const tables = await executeQuery<ChColumn>(client, getColumnsSql, params);
 
     return tables;
-}
+};
 
 const getColumnsSql: string = `
 select

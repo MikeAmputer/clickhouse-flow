@@ -11,7 +11,7 @@ export const getModel = async (settings: ChConnectionSettings, databases: string
     client.close();
 
     return new ChModel(tables, columns);
-}
+};
 
 export class ChModel {
     private tables: Map<string, TableEntry>;
@@ -42,18 +42,18 @@ export class ChModel {
                 if (this.tables.has(transition.source) && this.tables.has(transition.target)) {
                     this.transitions.push(transition);
                 }
-            })
+            });
         });
     }
 
     public getTables<T>(mapper: (entry: TableEntry) => T): T[] {
         return Array.from(this.tables.values()).map(mapper);
-    }
+    };
 
     public getTransitions(): [source: string, target: string][] {
         return this.transitions.map((t) => [t.source, t.target]);
-    }
-}
+    };
+};
 
 type TableEntry = {
     fullName: string;
@@ -68,7 +68,7 @@ type TableTransition = {
 
 const composeFullTableName = (database: string, table: string): string => {
     return `${database}.${table}`;
-}
+};
 
 const composeTransitions = (
     createCommand: string,
@@ -84,22 +84,22 @@ const composeTransitions = (
     matchTransitions(createCommand, fullName, true, toRegex)
         .forEach((t) => {
             result.push(t);
-        })
+        });
 
     matchTransitions(createCommand, fullName, false, fromRegex)
         .forEach((t) => {
             result.push(t);
-        })
+        });
 
     if (includeJoins) {
         matchTransitions(createCommand, fullName, false, joinRegex)
             .forEach((t) => {
                 result.push(t);
-            })
+            });
     }
 
     return result;
-}
+};
 
 const matchTransitions = (
     createCommand: string,
@@ -127,8 +127,8 @@ const matchTransitions = (
                 source: fullMatchedName,
                 target: fullName
             });
-        }
-    })
+        };
+    });
 
     return result;
-}
+};
