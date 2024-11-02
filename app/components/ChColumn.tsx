@@ -1,9 +1,5 @@
 import React from 'react';
-import {
-    TableCell,
-    TableRow,
-    Tooltip,
-} from '@mui/material';
+import { TableCell, TableRow, Tooltip, } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
 const OddNameTableCell = styled(TableCell)(({ theme }) => ({

@@ -31,7 +31,7 @@ export const executeQuery = async <T>(client: ClickHouseClient, query: string, p
     return new Promise((resolve, reject) => {
         stream.on('data', (data: Row[]) => {
             data.forEach((dataRow: Row) => {
-                var parsed = dataRow.json() as T;
+                const parsed = dataRow.json() as T;
                 result.push(parsed)
             })
         });
