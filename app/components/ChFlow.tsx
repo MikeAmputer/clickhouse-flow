@@ -1,11 +1,17 @@
 'use client'
 
+import { ChTableNodeProps } from "./ChTableNode";
+import { nodeTypes, type CustomNodeType } from "../nodes";
+import { useEffect } from 'react';
+import dagre from '@dagrejs/dagre';
+
 import {
     ReactFlow,
     ReactFlowProvider,
     Node,
     Edge,
     useNodesState,
+    useEdgesState,
     useReactFlow,
     MiniMap,
     Controls,
@@ -13,11 +19,6 @@ import {
 } from '@xyflow/react';
 
 import '@xyflow/react/dist/style.css';
-
-import { ChTableNodeProps } from "./ChTableNode";
-import { nodeTypes, type CustomNodeType } from "../nodes";
-import { useEffect } from 'react';
-import dagre from '@dagrejs/dagre';
 
 export type ChFlowProps = {
     tableNodes: ChTableNodeProps[];
@@ -43,41 +44,44 @@ const ChFlow: React.FC<ChFlowProps> = ({ tableNodes, transitions }) => {
         };
     }) satisfies Node[];
 
-    const sourceIndexMap: Record<string, number> = {};
-    const targetIndexMap: Record<string, number> = {};
+    const calculateEdges = (transitions: [source: string, target: string][]): Edge[] => {
+        const sourceIndexMap: Record<string, number> = {};
+        const targetIndexMap: Record<string, number> = {};
 
-    const edgeArray = transitions.map(([source, target], index) => {
-        const sourceIndex = sourceIndexMap[source] || 0;
-        sourceIndexMap[source] = sourceIndex + 1;
+        return transitions.map(([source, target], index) => {
+            const sourceIndex = sourceIndexMap[source] || 0;
+            sourceIndexMap[source] = sourceIndex + 1;
 
-        const targetIndex = targetIndexMap[target] || 0;
-        targetIndexMap[target] = targetIndex + 1;
+            const targetIndex = targetIndexMap[target] || 0;
+            targetIndexMap[target] = targetIndex + 1;
 
-        return {
-            id: `edge-${index}`,
-            source,
-            sourceHandle: `${source}-out-${sourceIndex}`,
-            target,
-            targetHandle: `${target}-in-${targetIndex}`,
-            animated: true,
-            style: { stroke: '#000' },
-        };
-    }) satisfies Edge[];
+            return {
+                id: `edge-${index}`,
+                source,
+                sourceHandle: `${source}-out-${sourceIndex}`,
+                target,
+                targetHandle: `${target}-in-${targetIndex}`,
+                animated: true,
+                style: { stroke: '#000' },
+            };
+        });
+    };
 
     const [nodes, , onNodesChange] = useNodesState<CustomNodeType>(nodeArray);
+    const [edges, , onEdgesChange] = useEdgesState<Edge>([]);
 
     const reactFlowInstance = useReactFlow();
     const nodesInitialized = useNodesInitialized({ includeHiddenNodes: false, });
 
     useEffect(() => {
         if (nodesInitialized) {
-            const nodes = reactFlowInstance.getNodes();
+            const flowNodes = reactFlowInstance.getNodes();
 
             var dag = new dagre.graphlib.Graph({ directed: true });
             dag.setGraph({ rankdir: 'LR', align: 'UL', nodesep: 100, ranksep: 100 });
             dag.setDefaultEdgeLabel(() => { return {}; });
 
-            nodes.forEach(node => {
+            flowNodes.forEach(node => {
                 const bounds = reactFlowInstance.getNodesBounds([node]);
                 dag.setNode(node.id, { width: bounds.width, height: bounds.height });
             });
@@ -88,17 +92,23 @@ const ChFlow: React.FC<ChFlowProps> = ({ tableNodes, transitions }) => {
 
             dagre.layout(dag);
 
+            const transitionPriorities: Record<string, number> = {};
+
             dag.nodes().forEach((name) => {
                 const dagNode = dag.node(name);
-                reactFlowInstance.updateNode(
-                    name,
-                    {
-                        position: {
-                            x: dagNode.x - dagNode.width / 2,
-                            y: dagNode.y - dagNode.height / 2
-                        }
-                    });
+
+                const x = dagNode.x - dagNode.width / 2
+                const y = dagNode.y - dagNode.height / 2;
+
+                reactFlowInstance.updateNode(name, { position: { x, y } });
+
+                transitionPriorities[name] = y;
             });
+
+            const orderedTransitions = transitions
+                .toSorted((a, b) => transitionPriorities[a[1]] - transitionPriorities[b[1]]);
+
+            reactFlowInstance.setEdges(calculateEdges(orderedTransitions));
         }
     }, [nodesInitialized]);
 
@@ -107,8 +117,9 @@ const ChFlow: React.FC<ChFlowProps> = ({ tableNodes, transitions }) => {
             id='clickhouse-dag-flow'
             style={{ background: '#e0e0dc' }}
             nodes={nodes}
-            edges={edgeArray}
+            edges={edges}
             onNodesChange={onNodesChange}
+            onEdgesChange={onEdgesChange}
             nodeTypes={nodeTypes}
             minZoom={0.1}
             maxZoom={1}
