@@ -1,4 +1,7 @@
 import React, { useState } from 'react';
+import { styled } from '@mui/material/styles';
+import ChColumn, { ChColumnProps } from './ChColumn';
+import ChTableHeader from './ChTableHeader';
 
 import {
     Table,
@@ -8,58 +11,14 @@ import {
     TableHead,
     TableRow,
     Paper,
-    IconButton,
     Collapse,
     Box,
 } from '@mui/material';
-
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-
-import { styled } from '@mui/material/styles';
-
-import ChColumn, { ChColumnProps } from './ChColumn';
 
 const StyledTable = styled(Table)(() => ({
     borderCollapse: 'collapse',
     borderSpacing: 0,
     background: '#000',
-}));
-
-interface TableHeaderProps {
-    hasOwnData?: boolean;
-}
-
-const TableNameCell = styled(TableCell)<TableHeaderProps>(({ hasOwnData }) => ({
-    backgroundColor: hasOwnData ? '#000' : '#383838',
-    color: '#fff',
-    fontSize: 14,
-    textAlign: 'left',
-    padding: '5px',
-}));
-
-const ExpandCell = styled(TableCell)<TableHeaderProps>(({ hasOwnData }) => ({
-    backgroundColor: hasOwnData ? '#000' : '#383838',
-    textAlign: 'right',
-    padding: '5px',
-}));
-
-const ExpandButton = styled(IconButton)<TableHeaderProps>(({ hasOwnData }) => ({
-    color: '#fff',
-    '&:hover': {
-        backgroundColor: hasOwnData ? '#383838' : '#000',
-        color: '#fff',
-    },
-    '&:active': {
-        transform: 'scale(0.95)',
-    },
-}));
-
-const TableHeadRow = styled(TableRow)<TableHeaderProps>(({ hasOwnData }) => ({
-    borderBottom: 'solid',
-    borderBottomWidth: 0,
-    borderColor: '#000',
-    backgroundColor: hasOwnData ? '#000' : '#383838',
 }));
 
 export type ChTableProps = {
@@ -70,25 +29,17 @@ export type ChTableProps = {
 }
 
 const ChTable: React.FC<ChTableProps> = (table) => {
-    const [open, setOpen] = useState(table.engine != 'MaterializedView');
+    const [open, setOpen] = useState(table.engine !== 'MaterializedView');
 
     return (
         <TableContainer component={Paper}>
             <StyledTable size={'small'} aria-label="ch-table">
                 <TableHead>
-                    <TableHeadRow hasOwnData={table.hasOwnData}>
-                        <TableNameCell hasOwnData={table.hasOwnData}>{table.name}</TableNameCell>
-                        <ExpandCell hasOwnData={table.hasOwnData}>
-                            <ExpandButton
-                                hasOwnData={table.hasOwnData}
-                                aria-label={'expand table'}
-                                size={'small'}
-                                onClick={() => setOpen(!open)}
-                            >
-                                {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-                            </ExpandButton>
-                        </ExpandCell>
-                    </TableHeadRow>
+                    <ChTableHeader
+                        name={table.name}
+                        hasOwnData={table.hasOwnData}
+                        openState={[open, setOpen]}
+                    />
                 </TableHead>
                 <TableBody>
                     <TableRow>
