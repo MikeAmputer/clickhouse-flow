@@ -19,7 +19,10 @@ export default function ChTableNode({ data }: NodeProps<ChTableNode>) {
                     id={`${data.table.fullName}-in-${index}`}
                     type="target"
                     position={Position.Left}
-                    style={{ top: calculateHandlePosition(index, data.inTables as number), background: '#555' }}
+                    style={{
+                        top: calculateHandlePosition(index, data.inTables as number),
+                        transform: 'scale(0)',
+                    }}
                     isConnectable={false}
                 />
             ))}
@@ -32,7 +35,12 @@ export default function ChTableNode({ data }: NodeProps<ChTableNode>) {
                     id={`${data.table.fullName}-out-${index}`}
                     type="source"
                     position={Position.Right}
-                    style={{ top: calculateHandlePosition(index, data.outTables as number), background: '#555' }}
+                    style={{
+                        top: calculateHandlePosition(index, data.outTables as number),
+                        background: '#000',
+                        width: 7,
+                        height: 7,
+                    }}
                     isConnectable={false}
                 />
             ))}
