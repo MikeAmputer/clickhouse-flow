@@ -5,17 +5,19 @@ import { getModel } from './db/model';
 
 export default async function Home() {
   const connectionSettings: ChConnectionSettings = {
-    url: "http://localhost:48123",
-    username: "developer",
-    password: "developer",
+    url: 'http://localhost:48123',
+    username: 'developer',
+    password: 'developer',
   };
 
-  const model = await getModel(connectionSettings, ["flow_test"]);
+  const model = await getModel(connectionSettings, ['flow_test']);
+  const presentationDatabase = 'flow_test';
 
   const tableNodes = model.getTables<ChTableNodeProps>((entry) => {
     return {
       table: {
-        name: entry.fullName,
+        fullName: entry.fullName,
+        presentationName: trimNamePrefix(entry.fullName, `${presentationDatabase}.`),
         engine: entry.table.engine,
         hasOwnData: entry.table.hasOwnData,
         columns: entry.columns.map(column => ({
@@ -40,3 +42,10 @@ export default async function Home() {
     </div>
   );
 };
+
+function trimNamePrefix(input: string, prefix: string): string {
+  if (input.startsWith(prefix)) {
+    return input.slice(prefix.length);
+  }
+  return input;
+}

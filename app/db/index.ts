@@ -12,7 +12,7 @@ export type ChConnectionSettings = {
 export const createClient = (settings: ChConnectionSettings): ClickHouseClient => {
     return createChClient({
         url: settings.url,
-        database: "system",
+        database: 'system',
         username: settings.username,
         password: settings.password,
     });

@@ -16,6 +16,7 @@ import {
     MiniMap,
     Controls,
     useNodesInitialized,
+    MarkerType,
 } from '@xyflow/react';
 
 import '@xyflow/react/dist/style.css';
@@ -33,10 +34,10 @@ const ChFlow: React.FC<ChFlowProps> = ({ tableNodes, transitions }) => {
     };
 
     const nodeArray = tableNodes.map((node, index) => {
-        const { inTables, outTables } = calculateTableConnections(node.table.name);
+        const { inTables, outTables } = calculateTableConnections(node.table.fullName);
 
         return {
-            id: node.table.name,
+            id: node.table.fullName,
             type: 'ch-table',
             data: { ...node, inTables, outTables },
             style: { border: '0px solid #777', padding: 3 },
@@ -61,8 +62,14 @@ const ChFlow: React.FC<ChFlowProps> = ({ tableNodes, transitions }) => {
                 sourceHandle: `${source}-out-${sourceIndex}`,
                 target,
                 targetHandle: `${target}-in-${targetIndex}`,
-                animated: true,
+                animated: false,
                 style: { stroke: '#000' },
+                markerEnd: {
+                    type: MarkerType.ArrowClosed,
+                    width: 25,
+                    height: 25,
+                    color: '#000',
+                },
             };
         });
     };

@@ -22,7 +22,8 @@ const StyledTable = styled(Table)(() => ({
 }));
 
 export type ChTableProps = {
-    name: string;
+    fullName: string;
+    presentationName: string;
     engine: string;
     hasOwnData: boolean;
     columns: ChColumnProps[];
@@ -36,7 +37,7 @@ const ChTable: React.FC<ChTableProps> = (table) => {
             <StyledTable size={'small'} aria-label="ch-table">
                 <TableHead>
                     <ChTableHeader
-                        name={table.name}
+                        name={table.presentationName}
                         hasOwnData={table.hasOwnData}
                         openState={[open, setOpen]}
                     />
@@ -49,7 +50,7 @@ const ChTable: React.FC<ChTableProps> = (table) => {
                                     <StyledTable size="small" aria-label="columns">
                                         <TableBody>
                                             {table.columns.map((column) => (
-                                                <ChColumn key={`${table.name}_${column.position}`} {...column} />
+                                                <ChColumn key={`${table.fullName}_${column.position}`} {...column} />
                                             ))}
                                         </TableBody>
                                     </StyledTable>
