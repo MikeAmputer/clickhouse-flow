@@ -16,6 +16,8 @@ export default async function Home() {
     return {
       table: {
         name: entry.fullName,
+        engine: entry.table.engine,
+        hasOwnData: entry.table.hasOwnData,
         columns: entry.columns.map(column => ({
           position: column.position,
           name: column.name,
