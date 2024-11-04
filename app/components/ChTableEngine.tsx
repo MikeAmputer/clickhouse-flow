@@ -7,40 +7,47 @@ import { TableCell, TableRow, IconButton, } from '@mui/material';
 const padding = '3px';
 const horizontalPadding = '4px';
 
-interface TableStyledHeaderProps {
+interface EngineStyledProps {
     hasOwnData?: boolean;
 };
 
-const TableHeadRow = styled(TableRow)<TableStyledHeaderProps>(({ hasOwnData }) => ({
+const EngineHeadRow = styled(TableRow)<EngineStyledProps>(({ hasOwnData }) => ({
     borderBottom: 'solid',
     borderBottomWidth: 2,
+    borderTop: 'solid',
+    borderTopWidth: 2,
     borderColor: hasOwnData ? '#000' : '#383838',
     backgroundColor: hasOwnData ? '#000' : '#383838',
 }));
 
-const TableNameCell = styled(TableCell)<TableStyledHeaderProps>(({ hasOwnData }) => ({
+const EngineNameCell = styled(TableCell)<EngineStyledProps>(({ hasOwnData }) => ({
     backgroundColor: hasOwnData ? '#000' : '#383838',
     color: '#fff',
     fontSize: 14,
+    fontStyle: 'oblique',
     textAlign: 'left',
     padding: padding,
     borderRight: 'solid',
     borderRightWidth: 2,
+    borderTop: 'solid',
+    borderTopWidth: 2,
     borderColor: hasOwnData ? '#000' : '#383838',
     paddingLeft: horizontalPadding,
 }));
 
-const ExpandCell = styled(TableCell)<TableStyledHeaderProps>(({ hasOwnData }) => ({
+const ExpandCell = styled(TableCell)<EngineStyledProps>(({ hasOwnData }) => ({
     backgroundColor: hasOwnData ? '#000' : '#383838',
     textAlign: 'right',
     padding: padding,
     borderLeft: 'solid',
     borderLeftWidth: 2,
+    borderTop: 'solid',
+    borderTopWidth: 2,
     borderColor: hasOwnData ? '#000' : '#383838',
     paddingRight: horizontalPadding,
 }));
 
-const ExpandButton = styled(IconButton)<TableStyledHeaderProps>(({ hasOwnData }) => ({
+const ExpandButton = styled(IconButton)<EngineStyledProps>(({ hasOwnData }) => ({
     height: 25,
     width: 25,
     color: '#fff',
@@ -53,30 +60,37 @@ const ExpandButton = styled(IconButton)<TableStyledHeaderProps>(({ hasOwnData })
     },
 }));
 
-export type ChTableHeaderProps = {
-    name: string;
+export type ChTableEngineProps = {
+    engineName: string;
     hasOwnData: boolean;
+    hasEngineKeys: boolean;
     openState: [boolean, Dispatch<SetStateAction<boolean>>];
 };
 
-const ChTableHeader: React.FC<ChTableHeaderProps> = (props) => {
+const ChTableEngine: React.FC<ChTableEngineProps> = (props) => {
     const [open, setOpen] = props.openState;
 
     return (
-        <TableHeadRow hasOwnData={props.hasOwnData}>
-            <TableNameCell hasOwnData={props.hasOwnData}>{props.name}</TableNameCell>
+        <EngineHeadRow hasOwnData={props.hasOwnData}>
+            <EngineNameCell hasOwnData={props.hasOwnData}>
+                {props.engineName}
+            </EngineNameCell>
             <ExpandCell hasOwnData={props.hasOwnData}>
-                <ExpandButton
-                    hasOwnData={props.hasOwnData}
-                    aria-label={'expand table'}
-                    size={'small'}
-                    onClick={() => setOpen(!open)}
-                >
-                    {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-                </ExpandButton>
+                {props.hasEngineKeys ? (
+                    <ExpandButton
+                        hasOwnData={props.hasOwnData}
+                        aria-label={'expand table'}
+                        size={'small'}
+                        onClick={() => setOpen(!open)}
+                    >
+                        {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+                    </ExpandButton>
+                ) : (
+                    <></>
+                )}
             </ExpandCell>
-        </TableHeadRow>
+        </EngineHeadRow>
     );
 };
 
-export default ChTableHeader;
+export default ChTableEngine;

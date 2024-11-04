@@ -14,19 +14,25 @@ export default async function Home() {
   const presentationDatabase = 'flow_test';
 
   const tableNodes = model.getTables<ChTableNodeProps>((entry) => {
+    const table = entry.table;
+
     return {
       table: {
         fullName: entry.fullName,
         presentationName: trimNamePrefix(entry.fullName, `${presentationDatabase}.`),
-        engine: entry.table.engine,
-        hasOwnData: entry.table.hasOwnData,
+        engine: getEngineRepresentation(table.engine, table.engineFull),
+        hasOwnData: table.hasOwnData,
         columns: entry.columns.map(column => ({
           position: column.position,
           name: column.name,
           type: column.type,
           defaultKind: column.defaultKind,
           defaultExpression: column.defaultExpression
-        }))
+        })),
+        primaryKey: table.primaryKey,
+        sortingKey: table.sortingKey,
+        partitionKey: table.partitionKey,
+        samplingKey: table.samplingKey,
       },
     }
   });
@@ -48,4 +54,9 @@ function trimNamePrefix(input: string, prefix: string): string {
     return input.slice(prefix.length);
   }
   return input;
+}
+
+function getEngineRepresentation(engine: string, engineFull: string): string {
+  const match = engineFull.match(/^(\w+\s*\([^)]*\))/);
+  return match ? match[0] : engine;
 }
