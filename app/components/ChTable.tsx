@@ -23,6 +23,7 @@ const StyledTable = styled(Table)<TableStyledProps>(({ hasOwnData }) => ({
     borderCollapse: 'collapse',
     borderSpacing: 0,
     background: hasOwnData ? '#000' : '#383838',
+    minWidth: 250,
 }));
 
 export type ChTableProps = {

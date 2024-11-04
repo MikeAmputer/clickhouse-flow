@@ -85,7 +85,7 @@ const ChFlow: React.FC<ChFlowProps> = ({ tableNodes, transitions }) => {
             const flowNodes = reactFlowInstance.getNodes();
 
             var dag = new dagre.graphlib.Graph({ directed: true });
-            dag.setGraph({ rankdir: 'LR', align: 'UL', nodesep: 100, ranksep: 100 });
+            dag.setGraph({ rankdir: 'LR', align: 'UL', nodesep: 80, ranksep: 80 });
             dag.setDefaultEdgeLabel(() => { return {}; });
 
             flowNodes.forEach(node => {
@@ -131,7 +131,7 @@ const ChFlow: React.FC<ChFlowProps> = ({ tableNodes, transitions }) => {
             minZoom={0.1}
             maxZoom={1}
             proOptions={{ hideAttribution: true }}
-            snapGrid={[50, 50]}
+            snapGrid={[25, 25]}
             snapToGrid={true}
         >
             <MiniMap
