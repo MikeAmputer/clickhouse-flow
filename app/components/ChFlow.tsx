@@ -134,16 +134,6 @@ const ChFlow: React.FC<ChFlowProps> = ({ tableNodes, transitions }) => {
             snapGrid={[25, 25]}
             snapToGrid={true}
         >
-            <MiniMap
-                nodeStrokeColor={(n) => {
-                    if (n.type === 'ch-table') return '#fffec8';
-                    return '#fff';
-                }}
-                nodeColor={(n) => {
-                    if (n.type === 'ch-table') return '#fffec8';
-                    return '#fff';
-                }}
-            />
             <Controls style={{ color: '#000' }} />
         </ReactFlow>
     );
