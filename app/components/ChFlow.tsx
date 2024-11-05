@@ -131,7 +131,7 @@ const ChFlow: React.FC<ChFlowProps> = ({ tableNodes, transitions }) => {
             minZoom={0.1}
             maxZoom={1}
             proOptions={{ hideAttribution: true }}
-            snapGrid={[25, 25]}
+            snapGrid={[15, 15]}
             snapToGrid={true}
         >
             <Controls style={{ color: '#000' }} />
