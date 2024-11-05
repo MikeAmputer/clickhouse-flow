@@ -21,6 +21,7 @@ export default function ChTableNode({ data }: NodeProps<ChTableNode>) {
                     position={Position.Left}
                     style={{
                         top: calculateHandlePosition(index, data.inTables as number),
+                        left: -4,
                         transform: 'scale(0)',
                     }}
                     isConnectable={false}
@@ -37,9 +38,8 @@ export default function ChTableNode({ data }: NodeProps<ChTableNode>) {
                     position={Position.Right}
                     style={{
                         top: calculateHandlePosition(index, data.outTables as number),
-                        background: '#000',
-                        width: 7,
-                        height: 7,
+                        right: 3,
+                        transform: 'scale(0)',
                     }}
                     isConnectable={false}
                 />

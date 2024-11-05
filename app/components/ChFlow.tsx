@@ -40,7 +40,7 @@ const ChFlow: React.FC<ChFlowProps> = ({ tableNodes, transitions }) => {
             id: node.table.fullName,
             type: 'ch-table',
             data: { ...node, inTables, outTables },
-            style: { border: '0px solid #777', padding: 3 },
+            style: { border: '0px solid #777' },
             position: { x: 0, y: 0 },
         };
     }) satisfies Node[];
