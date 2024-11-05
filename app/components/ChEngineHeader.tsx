@@ -7,21 +7,25 @@ import { TableCell, TableRow, IconButton, } from '@mui/material';
 const padding = '3px';
 const horizontalPadding = '4px';
 
+const ownDataHeaderColor = '#000';
+const viewHeaderColor = '#383838';
+
+
 interface EngineStyledProps {
     hasOwnData?: boolean;
 };
 
-const EngineHeadRow = styled(TableRow)<EngineStyledProps>(({ hasOwnData }) => ({
+const EngineHeaderRow = styled(TableRow)<EngineStyledProps>(({ hasOwnData }) => ({
     borderBottom: 'solid',
     borderBottomWidth: 2,
     borderTop: 'solid',
     borderTopWidth: 2,
-    borderColor: hasOwnData ? '#000' : '#383838',
-    backgroundColor: hasOwnData ? '#000' : '#383838',
+    borderColor: hasOwnData ? ownDataHeaderColor : viewHeaderColor,
+    backgroundColor: hasOwnData ? ownDataHeaderColor : viewHeaderColor,
 }));
 
 const EngineNameCell = styled(TableCell)<EngineStyledProps>(({ hasOwnData }) => ({
-    backgroundColor: hasOwnData ? '#000' : '#383838',
+    backgroundColor: hasOwnData ? ownDataHeaderColor : viewHeaderColor,
     color: '#fff',
     fontSize: 14,
     fontStyle: 'oblique',
@@ -31,19 +35,19 @@ const EngineNameCell = styled(TableCell)<EngineStyledProps>(({ hasOwnData }) => 
     borderRightWidth: 2,
     borderTop: 'solid',
     borderTopWidth: 2,
-    borderColor: hasOwnData ? '#000' : '#383838',
+    borderColor: hasOwnData ? ownDataHeaderColor : viewHeaderColor,
     paddingLeft: horizontalPadding,
 }));
 
 const ExpandCell = styled(TableCell)<EngineStyledProps>(({ hasOwnData }) => ({
-    backgroundColor: hasOwnData ? '#000' : '#383838',
+    backgroundColor: hasOwnData ? ownDataHeaderColor : viewHeaderColor,
     textAlign: 'right',
     padding: padding,
     borderLeft: 'solid',
     borderLeftWidth: 2,
     borderTop: 'solid',
     borderTopWidth: 2,
-    borderColor: hasOwnData ? '#000' : '#383838',
+    borderColor: hasOwnData ? ownDataHeaderColor : viewHeaderColor,
     paddingRight: horizontalPadding,
 }));
 
@@ -52,26 +56,25 @@ const ExpandButton = styled(IconButton)<EngineStyledProps>(({ hasOwnData }) => (
     width: 25,
     color: '#fff',
     '&:hover': {
-        backgroundColor: hasOwnData ? '#383838' : '#000',
-        color: '#fff',
+        backgroundColor: hasOwnData ? viewHeaderColor : ownDataHeaderColor,
     },
     '&:active': {
         transform: 'scale(0.9)',
     },
 }));
 
-export type ChTableEngineProps = {
+export type ChEngineHeaderProps = {
     engineName: string;
     hasOwnData: boolean;
     hasEngineKeys: boolean;
     openState: [boolean, Dispatch<SetStateAction<boolean>>];
 };
 
-const ChTableEngine: React.FC<ChTableEngineProps> = (props) => {
+const ChEngineHeader: React.FC<ChEngineHeaderProps> = (props) => {
     const [open, setOpen] = props.openState;
 
     return (
-        <EngineHeadRow hasOwnData={props.hasOwnData}>
+        <EngineHeaderRow hasOwnData={props.hasOwnData}>
             <EngineNameCell hasOwnData={props.hasOwnData}>
                 {props.engineName}
             </EngineNameCell>
@@ -89,8 +92,8 @@ const ChTableEngine: React.FC<ChTableEngineProps> = (props) => {
                     <></>
                 )}
             </ExpandCell>
-        </EngineHeadRow>
+        </EngineHeaderRow>
     );
 };
 
-export default ChTableEngine;
+export default ChEngineHeader;

@@ -5,15 +5,31 @@ import { styled } from '@mui/material/styles';
 const padding = '4px';
 const horizontalPadding = '8px';
 
+const oddColor = '#fffbd4';
+const evenColor = '#ebebeb';
+
+const StyledTableRow = styled(TableRow)(() => ({
+    '&:nth-of-type(even)': {
+        backgroundColor: evenColor,
+        borderColor: evenColor,
+    },
+    '&:nth-of-type(odd)': {
+        backgroundColor: oddColor,
+        borderColor: oddColor,
+    },
+    borderBottom: 'solid',
+    borderBottomWidth: 2,
+}));
+
 const OddNameTableCell = styled(TableCell)(() => ({
     fontSize: 14,
     color: '#000',
     textAlign: 'left',
     padding: padding,
-    backgroundColor: '#fffbd4',
+    backgroundColor: oddColor,
     borderRight: 'solid',
     borderRightWidth: 2,
-    borderColor: '#fffbd4',
+    borderColor: oddColor,
     paddingLeft: horizontalPadding,
 }));
 
@@ -22,48 +38,35 @@ const EvenNameTableCell = styled(TableCell)(() => ({
     color: '#000',
     textAlign: 'left',
     padding: padding,
-    backgroundColor: '#ebebeb',
+    backgroundColor: evenColor,
     borderRight: 'solid',
     borderRightWidth: 2,
-    borderColor: '#ebebeb',
+    borderColor: evenColor,
     paddingLeft: horizontalPadding,
 }));
 
 const OddTypeTableCell = styled(TableCell)(() => ({
     fontSize: 12,
-    color: '#888',
+    color: '#777',
     textAlign: 'right',
     padding: padding,
     borderLeft: 'solid',
     borderLeftWidth: 2,
-    borderColor: '#fffbd4',
-    backgroundColor: '#fffbd4',
+    borderColor: oddColor,
+    backgroundColor: oddColor,
     paddingRight: horizontalPadding,
 }));
 
 const EvenTypeTableCell = styled(TableCell)(() => ({
     fontSize: 12,
-    color: '#888',
+    color: '#777',
     textAlign: 'right',
     padding: padding,
     borderLeft: 'solid',
     borderLeftWidth: 2,
-    borderColor: '#ebebeb',
-    backgroundColor: '#ebebeb',
+    borderColor: evenColor,
+    backgroundColor: evenColor,
     paddingRight: horizontalPadding,
-}));
-
-const StyledTableRow = styled(TableRow)(() => ({
-    '&:nth-of-type(even)': {
-        backgroundColor: '#ebebeb',
-        borderColor: '#ebebeb',
-    },
-    '&:nth-of-type(odd)': {
-        backgroundColor: '#fffbd4',
-        borderColor: '#fffbd4',
-    },
-    borderBottom: 'solid',
-    borderBottomWidth: 2,
 }));
 
 export type ChColumnProps = {

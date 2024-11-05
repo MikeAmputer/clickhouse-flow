@@ -7,6 +7,9 @@ import { TableCell, TableRow, IconButton, } from '@mui/material';
 const padding = '3px';
 const horizontalPadding = '4px';
 
+const ownDataHeaderColor = '#000';
+const viewHeaderColor = '#383838';
+
 interface TableStyledHeaderProps {
     hasOwnData?: boolean;
 };
@@ -14,29 +17,29 @@ interface TableStyledHeaderProps {
 const TableHeadRow = styled(TableRow)<TableStyledHeaderProps>(({ hasOwnData }) => ({
     borderBottom: 'solid',
     borderBottomWidth: 2,
-    borderColor: hasOwnData ? '#000' : '#383838',
-    backgroundColor: hasOwnData ? '#000' : '#383838',
+    borderColor: hasOwnData ? ownDataHeaderColor : viewHeaderColor,
+    backgroundColor: hasOwnData ? ownDataHeaderColor : viewHeaderColor,
 }));
 
 const TableNameCell = styled(TableCell)<TableStyledHeaderProps>(({ hasOwnData }) => ({
-    backgroundColor: hasOwnData ? '#000' : '#383838',
+    backgroundColor: hasOwnData ? ownDataHeaderColor : viewHeaderColor,
     color: '#fff',
     fontSize: 14,
     textAlign: 'left',
     padding: padding,
     borderRight: 'solid',
     borderRightWidth: 2,
-    borderColor: hasOwnData ? '#000' : '#383838',
+    borderColor: hasOwnData ? ownDataHeaderColor : viewHeaderColor,
     paddingLeft: horizontalPadding,
 }));
 
 const ExpandCell = styled(TableCell)<TableStyledHeaderProps>(({ hasOwnData }) => ({
-    backgroundColor: hasOwnData ? '#000' : '#383838',
+    backgroundColor: hasOwnData ? ownDataHeaderColor : viewHeaderColor,
     textAlign: 'right',
     padding: padding,
     borderLeft: 'solid',
     borderLeftWidth: 2,
-    borderColor: hasOwnData ? '#000' : '#383838',
+    borderColor: hasOwnData ? ownDataHeaderColor : viewHeaderColor,
     paddingRight: horizontalPadding,
 }));
 
@@ -45,8 +48,7 @@ const ExpandButton = styled(IconButton)<TableStyledHeaderProps>(({ hasOwnData })
     width: 25,
     color: '#fff',
     '&:hover': {
-        backgroundColor: hasOwnData ? '#383838' : '#000',
-        color: '#fff',
+        backgroundColor: hasOwnData ? viewHeaderColor : ownDataHeaderColor,
     },
     '&:active': {
         transform: 'scale(0.9)',

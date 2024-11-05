@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { styled } from '@mui/material/styles';
 import ChColumn, { ChColumnProps } from './ChColumn';
+import ChEngineRow, { ChEngineRowProps } from './ChEngineRow';
 import ChTableHeader from './ChTableHeader';
-import ChTableEngine from './ChTableEngine';
+import ChEngineHeader from './ChEngineHeader';
 
 import {
     Table,
@@ -15,15 +16,22 @@ import {
     Box,
 } from '@mui/material';
 
+const ownDataHeaderColor = '#000';
+const viewHeaderColor = '#383838';
+
 interface TableStyledProps {
     hasOwnData?: boolean;
+    borderWidth?: number;
 };
 
-const StyledTable = styled(Table)<TableStyledProps>(({ hasOwnData }) => ({
+const StyledTable = styled(Table)<TableStyledProps>(({ hasOwnData, borderWidth }) => ({
     borderCollapse: 'collapse',
     borderSpacing: 0,
-    background: hasOwnData ? '#000' : '#383838',
+    background: hasOwnData ? ownDataHeaderColor : viewHeaderColor,
     minWidth: 250,
+    borderStyle: 'solid',
+    borderWidth: borderWidth ?? 0,
+    borderColor: hasOwnData ? ownDataHeaderColor : viewHeaderColor,
 }));
 
 export type ChTableProps = {
@@ -42,33 +50,45 @@ const ChTable: React.FC<ChTableProps> = (table) => {
     const [columnsOpen, setColumnsOpen] = useState(table.engine !== 'MaterializedView');
     const [engineOpen, setEngineOpen] = useState(false);
 
-    const hasEngineKeys = [table.primaryKey, table.sortingKey, table.partitionKey, table.samplingKey]
-        .some(key => key != null && key.trim() !== '');
+    const engineKeys: [name: string, value: string][] = [
+        ['ORDER BY', table.sortingKey],
+        ['PARTITION BY', table.partitionKey],
+        ['PRIMARY KEY', table.primaryKey],
+        ['SAMPLE BY', table.samplingKey],
+    ];
+
+    const nonEmptyEngineKeys = engineKeys.filter((key) => key[1] != null && key[1].trim() !== '');
 
     return (
         <TableContainer component={Paper}>
-            <StyledTable size={'small'} aria-label="ch-table">
+            <StyledTable size={'small'} aria-label='ch-table' hasOwnData={table.hasOwnData}>
                 <TableBody>
                     <ChTableHeader
                         name={table.presentationName}
                         hasOwnData={table.hasOwnData}
                         openState={[columnsOpen, setColumnsOpen]}
                     />
+
                     <TableRow>
-                        <TableCell style={{ paddingBottom: 0, paddingTop: 0, padding: 0 }} colSpan={2}>
-                            <Collapse in={columnsOpen} timeout="auto" unmountOnExit>
+                        <TableCell style={{ paddingBottom: 0, paddingTop: 0, padding: 0, borderWidth: 0 }} colSpan={2}>
+                            <Collapse in={columnsOpen} timeout='auto' unmountOnExit>
                                 <Box>
-                                    <StyledTable size="small" aria-label="columns">
+                                    <Table
+                                        size='small'
+                                        aria-label='engine'
+                                        style={{ borderCollapse: 'collapse', borderSpacing: 0, }}
+                                    >
                                         <TableBody>
                                             {table.columns.map((column) => (
                                                 <ChColumn key={`${table.fullName}_${column.position}`} {...column} />
                                             ))}
                                         </TableBody>
-                                    </StyledTable>
+                                    </Table>
                                 </Box>
                             </Collapse>
                         </TableCell>
                     </TableRow>
+
                     {!columnsOpen ? (
                         <TableRow>
                             <TableCell style={{ paddingBottom: 0, paddingTop: 0, padding: 0 }} colSpan={2}>
@@ -78,12 +98,38 @@ const ChTable: React.FC<ChTableProps> = (table) => {
                     ) : (
                         <></>
                     )}
-                    <ChTableEngine
+
+                    <ChEngineHeader
                         engineName={table.engine}
                         hasOwnData={table.hasOwnData}
-                        hasEngineKeys={hasEngineKeys}
+                        hasEngineKeys={nonEmptyEngineKeys.length > 0}
                         openState={[engineOpen, setEngineOpen]}
                     />
+
+                    <TableRow>
+                        <TableCell style={{ paddingBottom: 0, paddingTop: 0, padding: 0, borderWidth: 0 }} colSpan={2}>
+                            <Collapse in={engineOpen} timeout='auto' unmountOnExit>
+                                <Box>
+                                    <Table
+                                        size='small'
+                                        aria-label='engine'
+                                        style={{ borderCollapse: 'collapse', borderSpacing: 0, }}
+                                    >
+                                        <TableBody>
+                                            {nonEmptyEngineKeys.map((row, index) => (
+                                                <ChEngineRow
+                                                    key={`${table.fullName}_${row[0]}`}
+                                                    position={index + 1}
+                                                    name={row[0]}
+                                                    value={row[1]}
+                                                />
+                                            ))}
+                                        </TableBody>
+                                    </Table>
+                                </Box>
+                            </Collapse>
+                        </TableCell>
+                    </TableRow>
                 </TableBody>
             </StyledTable>
         </TableContainer >
