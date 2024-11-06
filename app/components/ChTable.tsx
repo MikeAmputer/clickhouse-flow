@@ -20,18 +20,18 @@ const ownDataHeaderColor = '#000';
 const viewHeaderColor = '#383838';
 
 interface TableStyledProps {
-    hasOwnData?: boolean;
-    borderWidth?: number;
+    hasowndata?: boolean;
+    borderwidth?: number;
 };
 
-const StyledTable = styled(Table)<TableStyledProps>(({ hasOwnData, borderWidth }) => ({
+const StyledTable = styled(Table)<TableStyledProps>(({ hasowndata, borderwidth }) => ({
     borderCollapse: 'collapse',
     borderSpacing: 0,
-    background: hasOwnData ? ownDataHeaderColor : viewHeaderColor,
+    background: hasowndata ? ownDataHeaderColor : viewHeaderColor,
     minWidth: 250,
     borderStyle: 'solid',
-    borderWidth: borderWidth ?? 0,
-    borderColor: hasOwnData ? ownDataHeaderColor : viewHeaderColor,
+    borderWidth: borderwidth ?? 0,
+    borderColor: hasowndata ? ownDataHeaderColor : viewHeaderColor,
 }));
 
 export type ChTableProps = {
@@ -61,7 +61,7 @@ const ChTable: React.FC<ChTableProps> = (table) => {
 
     return (
         <TableContainer component={Paper}>
-            <StyledTable size={'small'} aria-label='ch-table' hasOwnData={table.hasOwnData}>
+            <StyledTable size={'small'} aria-label='ch-table' hasowndata={table.hasOwnData}>
                 <TableBody>
                     <ChTableHeader
                         name={table.presentationName}

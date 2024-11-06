@@ -1,17 +1,5 @@
-import { ChConnectionSettings, createClient } from '.';
-import { ChTable, getTables } from './tables';
-import { ChColumn, getColumns } from './columns';
-
-export const getModel = async (settings: ChConnectionSettings, databases: string[]): Promise<ChModel> => {
-    const client = createClient(settings);
-
-    const tables = await getTables(client, databases);
-    const columns = await getColumns(client, databases);
-
-    client.close();
-
-    return new ChModel(tables, columns);
-};
+import { ChTable } from '@/app/db/tables';
+import { ChColumn } from '@/app/db/columns';
 
 export class ChModel {
     private tables: Map<string, TableEntry>;

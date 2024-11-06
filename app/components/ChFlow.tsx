@@ -1,5 +1,3 @@
-'use client'
-
 import { ChTableNodeProps } from "./ChTableNode";
 import { nodeTypes, type CustomNodeType } from "../nodes";
 import { useEffect } from 'react';
@@ -13,7 +11,6 @@ import {
     useNodesState,
     useEdgesState,
     useReactFlow,
-    MiniMap,
     Controls,
     useNodesInitialized,
     MarkerType,
@@ -84,7 +81,7 @@ const ChFlow: React.FC<ChFlowProps> = ({ tableNodes, transitions }) => {
         if (nodesInitialized) {
             const flowNodes = reactFlowInstance.getNodes();
 
-            var dag = new dagre.graphlib.Graph({ directed: true });
+            const dag = new dagre.graphlib.Graph({ directed: true });
             dag.setGraph({ rankdir: 'LR', align: 'UL', nodesep: 80, ranksep: 80 });
             dag.setDefaultEdgeLabel(() => { return {}; });
 

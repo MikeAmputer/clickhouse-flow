@@ -11,44 +11,44 @@ const ownDataHeaderColor = '#000';
 const viewHeaderColor = '#383838';
 
 interface TableStyledHeaderProps {
-    hasOwnData?: boolean;
+    hasowndata?: boolean;
 };
 
-const TableHeadRow = styled(TableRow)<TableStyledHeaderProps>(({ hasOwnData }) => ({
+const TableHeadRow = styled(TableRow)<TableStyledHeaderProps>(({ hasowndata }) => ({
     borderBottom: 'solid',
     borderBottomWidth: 2,
-    borderColor: hasOwnData ? ownDataHeaderColor : viewHeaderColor,
-    backgroundColor: hasOwnData ? ownDataHeaderColor : viewHeaderColor,
+    borderColor: hasowndata ? ownDataHeaderColor : viewHeaderColor,
+    backgroundColor: hasowndata ? ownDataHeaderColor : viewHeaderColor,
 }));
 
-const TableNameCell = styled(TableCell)<TableStyledHeaderProps>(({ hasOwnData }) => ({
-    backgroundColor: hasOwnData ? ownDataHeaderColor : viewHeaderColor,
+const TableNameCell = styled(TableCell)<TableStyledHeaderProps>(({ hasowndata }) => ({
+    backgroundColor: hasowndata ? ownDataHeaderColor : viewHeaderColor,
     color: '#fff',
     fontSize: 14,
     textAlign: 'left',
     padding: padding,
     borderRight: 'solid',
     borderRightWidth: 2,
-    borderColor: hasOwnData ? ownDataHeaderColor : viewHeaderColor,
+    borderColor: hasowndata ? ownDataHeaderColor : viewHeaderColor,
     paddingLeft: horizontalPadding,
 }));
 
-const ExpandCell = styled(TableCell)<TableStyledHeaderProps>(({ hasOwnData }) => ({
-    backgroundColor: hasOwnData ? ownDataHeaderColor : viewHeaderColor,
+const ExpandCell = styled(TableCell)<TableStyledHeaderProps>(({ hasowndata }) => ({
+    backgroundColor: hasowndata ? ownDataHeaderColor : viewHeaderColor,
     textAlign: 'right',
     padding: padding,
     borderLeft: 'solid',
     borderLeftWidth: 2,
-    borderColor: hasOwnData ? ownDataHeaderColor : viewHeaderColor,
+    borderColor: hasowndata ? ownDataHeaderColor : viewHeaderColor,
     paddingRight: horizontalPadding,
 }));
 
-const ExpandButton = styled(IconButton)<TableStyledHeaderProps>(({ hasOwnData }) => ({
+const ExpandButton = styled(IconButton)<TableStyledHeaderProps>(({ hasowndata }) => ({
     height: 25,
     width: 25,
     color: '#fff',
     '&:hover': {
-        backgroundColor: hasOwnData ? viewHeaderColor : ownDataHeaderColor,
+        backgroundColor: hasowndata ? viewHeaderColor : ownDataHeaderColor,
     },
     '&:active': {
         transform: 'scale(0.9)',
@@ -65,11 +65,11 @@ const ChTableHeader: React.FC<ChTableHeaderProps> = (props) => {
     const [open, setOpen] = props.openState;
 
     return (
-        <TableHeadRow hasOwnData={props.hasOwnData}>
-            <TableNameCell hasOwnData={props.hasOwnData}>{props.name}</TableNameCell>
-            <ExpandCell hasOwnData={props.hasOwnData}>
+        <TableHeadRow hasowndata={props.hasOwnData}>
+            <TableNameCell hasowndata={props.hasOwnData}>{props.name}</TableNameCell>
+            <ExpandCell hasowndata={props.hasOwnData}>
                 <ExpandButton
-                    hasOwnData={props.hasOwnData}
+                    hasowndata={props.hasOwnData}
                     aria-label={'expand table'}
                     size={'small'}
                     onClick={() => setOpen(!open)}

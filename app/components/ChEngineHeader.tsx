@@ -12,20 +12,20 @@ const viewHeaderColor = '#383838';
 
 
 interface EngineStyledProps {
-    hasOwnData?: boolean;
+    hasowndata?: boolean;
 };
 
-const EngineHeaderRow = styled(TableRow)<EngineStyledProps>(({ hasOwnData }) => ({
+const EngineHeaderRow = styled(TableRow)<EngineStyledProps>(({ hasowndata }) => ({
     borderBottom: 'solid',
     borderBottomWidth: 2,
     borderTop: 'solid',
     borderTopWidth: 2,
-    borderColor: hasOwnData ? ownDataHeaderColor : viewHeaderColor,
-    backgroundColor: hasOwnData ? ownDataHeaderColor : viewHeaderColor,
+    borderColor: hasowndata ? ownDataHeaderColor : viewHeaderColor,
+    backgroundColor: hasowndata ? ownDataHeaderColor : viewHeaderColor,
 }));
 
-const EngineNameCell = styled(TableCell)<EngineStyledProps>(({ hasOwnData }) => ({
-    backgroundColor: hasOwnData ? ownDataHeaderColor : viewHeaderColor,
+const EngineNameCell = styled(TableCell)<EngineStyledProps>(({ hasowndata }) => ({
+    backgroundColor: hasowndata ? ownDataHeaderColor : viewHeaderColor,
     color: '#fff',
     fontSize: 14,
     fontStyle: 'oblique',
@@ -35,28 +35,28 @@ const EngineNameCell = styled(TableCell)<EngineStyledProps>(({ hasOwnData }) => 
     borderRightWidth: 2,
     borderTop: 'solid',
     borderTopWidth: 2,
-    borderColor: hasOwnData ? ownDataHeaderColor : viewHeaderColor,
+    borderColor: hasowndata ? ownDataHeaderColor : viewHeaderColor,
     paddingLeft: horizontalPadding,
 }));
 
-const ExpandCell = styled(TableCell)<EngineStyledProps>(({ hasOwnData }) => ({
-    backgroundColor: hasOwnData ? ownDataHeaderColor : viewHeaderColor,
+const ExpandCell = styled(TableCell)<EngineStyledProps>(({ hasowndata }) => ({
+    backgroundColor: hasowndata ? ownDataHeaderColor : viewHeaderColor,
     textAlign: 'right',
     padding: padding,
     borderLeft: 'solid',
     borderLeftWidth: 2,
     borderTop: 'solid',
     borderTopWidth: 2,
-    borderColor: hasOwnData ? ownDataHeaderColor : viewHeaderColor,
+    borderColor: hasowndata ? ownDataHeaderColor : viewHeaderColor,
     paddingRight: horizontalPadding,
 }));
 
-const ExpandButton = styled(IconButton)<EngineStyledProps>(({ hasOwnData }) => ({
+const ExpandButton = styled(IconButton)<EngineStyledProps>(({ hasowndata }) => ({
     height: 25,
     width: 25,
     color: '#fff',
     '&:hover': {
-        backgroundColor: hasOwnData ? viewHeaderColor : ownDataHeaderColor,
+        backgroundColor: hasowndata ? viewHeaderColor : ownDataHeaderColor,
     },
     '&:active': {
         transform: 'scale(0.9)',
@@ -74,14 +74,14 @@ const ChEngineHeader: React.FC<ChEngineHeaderProps> = (props) => {
     const [open, setOpen] = props.openState;
 
     return (
-        <EngineHeaderRow hasOwnData={props.hasOwnData}>
-            <EngineNameCell hasOwnData={props.hasOwnData}>
+        <EngineHeaderRow hasowndata={props.hasOwnData}>
+            <EngineNameCell hasowndata={props.hasOwnData}>
                 {props.engineName}
             </EngineNameCell>
-            <ExpandCell hasOwnData={props.hasOwnData}>
+            <ExpandCell hasowndata={props.hasOwnData}>
                 {props.hasEngineKeys ? (
                     <ExpandButton
-                        hasOwnData={props.hasOwnData}
+                        hasowndata={props.hasOwnData}
                         aria-label={'expand table'}
                         size={'small'}
                         onClick={() => setOpen(!open)}
