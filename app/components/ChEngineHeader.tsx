@@ -10,7 +10,6 @@ const horizontalPadding = '4px';
 const ownDataHeaderColor = '#000';
 const viewHeaderColor = '#383838';
 
-
 interface EngineStyledProps {
     hasowndata?: boolean;
 };
