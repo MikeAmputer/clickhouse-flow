@@ -1,4 +1,4 @@
-FROM node:23-alpine AS base
+FROM node:23.11-alpine3.21 AS base
 
 
 FROM base AS deps
@@ -16,24 +16,22 @@ COPY . .
 RUN npm run build
 
 
-FROM base AS runner
+FROM alpine:3.21 AS runner
 WORKDIR /app
+
+# Install Node.js
+COPY --from=base /usr/local/bin/node /usr/local/bin/node
+COPY --from=base /usr/lib /usr/lib
+
+# Copy app
+COPY --from=builder /app/.next/standalone ./
+COPY --from=builder /app/.next/static ./.next/static
+
+# Create and use non-root user
+RUN addgroup -g 1001 nodejs && adduser -S -u 1001 -G nodejs nextjs
+USER nextjs
 
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
-
-RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 nextjs
-
-# COPY --from=builder /app/public ./public
-COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
-COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
-
-USER nextjs
-
 EXPOSE 3000
-
-ENV PORT=3000
-ENV HOSTNAME="0.0.0.0"
-
 CMD ["node", "server.js"]
