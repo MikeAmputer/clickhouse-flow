@@ -1,13 +1,22 @@
 'use server'
 
-import { databaseConfigs, DatabaseConfig } from '@/app/config';
+import { getConfig, getDatabaseConfigs, DatabaseConfig } from '@/app/config';
 import { createClient } from '@/app/db';
 import { ChTable, getTables } from '@/app/db/tables';
 import { ChColumn, getColumns } from '@/app/db/columns';
 
-export const getDatabaseInfo = async (configName: string)
-  : Promise<[tables: ChTable[], columns: ChColumn[]]> => {
-  const databaseConfig = databaseConfigs.get(configName) as DatabaseConfig;
+export async function getAvailableDatabases(): Promise<string[]> {
+  return getConfig().databaseConfigs.map(c => c.name);
+}
+
+export interface DatabaseInfo {
+  tables: ChTable[];
+  columns: ChColumn[];
+  presentationDatabase: string;
+}
+
+export async function getDatabaseInfo(configName: string): Promise<DatabaseInfo> {
+  const databaseConfig = getDatabaseConfigs().get(configName) as DatabaseConfig;
   const settings = databaseConfig.connectionSettings;
   const databases = databaseConfig.targetDatabases;
 
@@ -18,5 +27,5 @@ export const getDatabaseInfo = async (configName: string)
 
   client.close();
 
-  return [tables, columns];
+  return { tables, columns, presentationDatabase: databaseConfig.presentationDatabase };
 };

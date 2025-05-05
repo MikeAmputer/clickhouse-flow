@@ -1,24 +1,31 @@
 'use client'
 
-import { databaseConfigs } from '@/app/config';
 import { ChTableNodeProps } from './components/ChTableNode';
 import DatabaseSelector from './components/DatabaseSelector';
 import ChFlowProvider, { ChFlowProps } from './components/ChFlow';
 import { ChModel } from './classes/ChModel';
-import { getDatabaseInfo } from '@/app/actions';
-import { useTransition, useState } from 'react';
+import { getDatabaseInfo, getAvailableDatabases } from '@/app/actions';
+import { useTransition, useState, useEffect } from 'react';
 
 export default function Home() {
   const [isPending, startTransition] = useTransition();
   const [flowProps, setFlowProps] = useState<ChFlowProps>({ tableNodes: [], transitions: [] });
   const [currentDb, setCurrentDb] = useState<string>('no-db-selected');
 
+  const [databases, setDatabases] = useState<string[]>([]);
+
+  useEffect(() => {
+    (async () => {
+      const dbs = await getAvailableDatabases();
+      setDatabases(dbs);
+    })();
+  }, []);
+
   const onDbSelect = (dbConfigName: string) => {
     startTransition(async () => {
-      const databaseConfig = databaseConfigs.get(dbConfigName);
-      const presentationDatabase = databaseConfig?.presentationDatabase;
       const dbInfo = await getDatabaseInfo(dbConfigName);
-      const model = new ChModel(dbInfo[0], dbInfo[1]);
+      const presentationDatabase = dbInfo.presentationDatabase;
+      const model = new ChModel(dbInfo.tables, dbInfo.columns);
 
       const tableNodes = model.getTables<ChTableNodeProps>((entry) => {
         const table = entry.table;
@@ -54,7 +61,7 @@ export default function Home() {
   return (
     <div style={{ height: '100vh' }}>
       <DatabaseSelector
-        databases={[...databaseConfigs.keys()]}
+        databases={databases}
         callback={onDbSelect}
       />
 

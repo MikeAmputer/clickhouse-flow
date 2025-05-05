@@ -1,0 +1,17 @@
+{
+  "databaseConfigs":
+  [
+    {
+      "name": "flow_test",
+      "config": {
+        "connectionSettings": {
+          "url": "http://localhost:48123",
+          "username": "developer",
+          "password": "developer"
+        },
+        "targetDatabases": ["flow_test"],
+        "presentationDatabase": "flow_test"
+      }
+    }
+  ]
+}
