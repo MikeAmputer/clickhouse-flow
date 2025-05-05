@@ -90,7 +90,7 @@ const ChFlow: React.FC<ChFlowProps> = ({ tableNodes, transitions }) => {
                 dag.setNode(node.id, { width: bounds.width, height: bounds.height });
             });
 
-            transitions.forEach((edge) => {
+            transitions.forEach(edge => {
                 dag.setEdge(edge[0], edge[1]);
             });
 
@@ -98,7 +98,7 @@ const ChFlow: React.FC<ChFlowProps> = ({ tableNodes, transitions }) => {
 
             const transitionPriorities: Record<string, number> = {};
 
-            dag.nodes().forEach((name) => {
+            dag.nodes().forEach(name => {
                 const dagNode = dag.node(name);
 
                 const x = dagNode.x - dagNode.width / 2
