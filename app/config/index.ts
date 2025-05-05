@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import type { ChConnectionSettings } from '@/app/db';
+import { ENV } from './env';
 
 export interface ConfigFile {
   databaseConfigs: DatabaseConfigEntry[];
@@ -18,10 +19,11 @@ export interface DatabaseConfig {
 }
 
 function getDefaultDatabaseConfig(): DatabaseConfig | null {
-  const url = process.env.CHF_DEFAULT_DB_URL;
-  const username = process.env.CHF_DEFAULT_DB_USERNAME;
-  const password = process.env.CHF_DEFAULT_DB_PASSWORD;
-  const name = process.env.CHF_DEFAULT_DB_NAME;
+  const {
+    CHF_DEFAULT_DB_URL: url,
+    CHF_DEFAULT_DB_USERNAME: username,
+    CHF_DEFAULT_DB_PASSWORD: password,
+    CHF_DEFAULT_DB_NAME: name } = ENV;
 
   if (url && username && password && name) {
     return {
@@ -35,9 +37,9 @@ function getDefaultDatabaseConfig(): DatabaseConfig | null {
 }
 
 function loadConfigFile(): ConfigFile | null {
-  const configPath: string = process.env.NODE_ENV !== 'production'
+  const configPath: string = ENV.NODE_ENV !== 'production'
     ? path.resolve('./app/config/dev-config.json')
-    : process.env.CHF_CONFIG_PATH || '/app/config/config.json';
+    : ENV.CHF_CONFIG_PATH || '/app/config/config.json';
 
   try {
     if (fs.existsSync(configPath)) {
