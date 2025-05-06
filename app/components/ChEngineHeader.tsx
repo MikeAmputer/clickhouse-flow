@@ -80,6 +80,7 @@ const ChEngineHeader: React.FC<ChEngineHeaderProps> = (props) => {
             <ExpandCell hasowndata={props.hasOwnData}>
                 {props.hasEngineKeys ? (
                     <ExpandButton
+                        export-hide='true'
                         hasowndata={props.hasOwnData}
                         aria-label={'expand table'}
                         size={'small'}

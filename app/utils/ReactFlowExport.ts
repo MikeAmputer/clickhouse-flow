@@ -73,13 +73,14 @@ export const exportReactFlowToSVG = async (width: number, height: number, dbConf
 
   const clone = container.cloneNode(true) as HTMLElement;
 
-  const elementsToHide = clone.querySelectorAll('[aria-label="expand table"]');
+  const elementsToHide = clone.querySelectorAll('[export-hide="true"]');
   elementsToHide.forEach(el => {
-    (el as HTMLElement).style.opacity = "0";
-    (el as HTMLElement).style.pointerEvents = "none";
+    const htmlEl = el as HTMLElement;
+    htmlEl.style.opacity = "0";
+    htmlEl.style.pointerEvents = "none";
   });
 
-  const cellsToTrim = clone.querySelectorAll('[data-export-trim="true"]');
+  const cellsToTrim = clone.querySelectorAll('[export-trim="true"]');
   cellsToTrim.forEach((cell) => {
     const el = cell as HTMLElement;
     el.style.borderRightWidth = '0px';

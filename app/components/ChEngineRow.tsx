@@ -82,8 +82,8 @@ const ChEngineRow: React.FC<ChEngineRowProps> = (props) => {
 
     return (
         <EngineRow>
-            <EngineRowLeftCell data-export-trim='true'>{props.name}</EngineRowLeftCell>
-            <EngineRowRightCell data-export-trim='true'>{props.value}</EngineRowRightCell>
+            <EngineRowLeftCell export-trim='true'>{props.name}</EngineRowLeftCell>
+            <EngineRowRightCell export-trim='true'>{props.value}</EngineRowRightCell>
         </EngineRow>
     );
 };

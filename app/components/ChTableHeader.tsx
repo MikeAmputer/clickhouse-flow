@@ -69,6 +69,7 @@ const ChTableHeader: React.FC<ChTableHeaderProps> = (props) => {
             <TableNameCell hasowndata={props.hasOwnData}>{props.name}</TableNameCell>
             <ExpandCell hasowndata={props.hasOwnData}>
                 <ExpandButton
+                    export-hide='true'
                     hasowndata={props.hasOwnData}
                     aria-label={'expand table'}
                     size={'small'}

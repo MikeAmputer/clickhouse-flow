@@ -86,8 +86,8 @@ const ChColumn: React.FC<ChColumnProps> = (column) => {
 
     return (
         <StyledTableRow>
-            <NameCell data-export-trim='true'>{column.name}</NameCell>
-            <TypeCell data-export-trim='true'>
+            <NameCell export-trim='true'>{column.name}</NameCell>
+            <TypeCell export-trim='true'>
                 {hasDefault ? (
                     <Tooltip title={`${column.defaultKind} ${column.defaultExpression}`}>
                         <span style={{ textDecoration: 'underline', cursor: 'help' }}>
