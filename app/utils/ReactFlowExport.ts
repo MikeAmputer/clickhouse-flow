@@ -88,6 +88,8 @@ export const exportReactFlow = async (width: number, height: number, dbConfigNam
     const el = cell as HTMLElement;
     el.style.borderRightWidth = '0px';
     el.style.borderLeftWidth = '0px';
+    el.style.borderBottomWidth = '0px';
+    el.style.borderTopWidth = '0px';
   });
 
   const originalTransform = getComputedStyle(container).transform;

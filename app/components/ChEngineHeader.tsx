@@ -73,11 +73,11 @@ const ChEngineHeader: React.FC<ChEngineHeaderProps> = (props) => {
     const [open, setOpen] = props.openState;
 
     return (
-        <EngineHeaderRow hasowndata={props.hasOwnData}>
-            <EngineNameCell hasowndata={props.hasOwnData}>
+        <EngineHeaderRow export-trim='true' hasowndata={props.hasOwnData}>
+            <EngineNameCell export-trim='true' hasowndata={props.hasOwnData}>
                 {props.engineName}
             </EngineNameCell>
-            <ExpandCell hasowndata={props.hasOwnData}>
+            <ExpandCell export-trim='true' hasowndata={props.hasOwnData}>
                 {props.hasEngineKeys ? (
                     <ExpandButton
                         export-hide='true'

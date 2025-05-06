@@ -65,9 +65,9 @@ const ChTableHeader: React.FC<ChTableHeaderProps> = (props) => {
     const [open, setOpen] = props.openState;
 
     return (
-        <TableHeadRow hasowndata={props.hasOwnData}>
-            <TableNameCell hasowndata={props.hasOwnData}>{props.name}</TableNameCell>
-            <ExpandCell hasowndata={props.hasOwnData}>
+        <TableHeadRow export-trim='true' hasowndata={props.hasOwnData}>
+            <TableNameCell export-trim='true' hasowndata={props.hasOwnData}>{props.name}</TableNameCell>
+            <ExpandCell export-trim='true' hasowndata={props.hasOwnData}>
                 <ExpandButton
                     export-hide='true'
                     hasowndata={props.hasOwnData}

@@ -81,7 +81,7 @@ const ChEngineRow: React.FC<ChEngineRowProps> = (props) => {
     const EngineRowRightCell = isOdd ? OddEngineRowRightCell : EvenEngineRowRightCell;
 
     return (
-        <EngineRow>
+        <EngineRow export-trim='true'>
             <EngineRowLeftCell export-trim='true'>{props.name}</EngineRowLeftCell>
             <EngineRowRightCell export-trim='true'>{props.value}</EngineRowRightCell>
         </EngineRow>

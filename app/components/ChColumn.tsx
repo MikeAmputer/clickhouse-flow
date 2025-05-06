@@ -85,7 +85,7 @@ const ChColumn: React.FC<ChColumnProps> = (column) => {
     const hasDefault = column.defaultKind || column.defaultExpression;
 
     return (
-        <StyledTableRow>
+        <StyledTableRow export-trim='true'>
             <NameCell export-trim='true'>{column.name}</NameCell>
             <TypeCell export-trim='true'>
                 {hasDefault ? (
