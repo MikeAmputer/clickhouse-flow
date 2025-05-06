@@ -26,9 +26,10 @@ import { exportReactFlowToSVG } from "../utils/ReactFlowExport";
 export type ChFlowProps = {
     tableNodes: ChTableNodeProps[];
     transitions: [source: string, target: string][];
+    dbConfigName: string;
 };
 
-const ChFlow: React.FC<ChFlowProps> = ({ tableNodes, transitions }) => {
+const ChFlow: React.FC<ChFlowProps> = ({ tableNodes, transitions, dbConfigName }) => {
     const calculateTableConnections = (tableName: string) => {
         const inTables = transitions.filter(([_, target]) => target === tableName).length;
         const outTables = transitions.filter(([source, _]) => source === tableName).length;
@@ -136,7 +137,7 @@ const ChFlow: React.FC<ChFlowProps> = ({ tableNodes, transitions }) => {
         setControlsVisible(false);
         await new Promise(requestAnimationFrame);
 
-        await exportReactFlowToSVG(bounds.width + 40, bounds.height + 40);
+        await exportReactFlowToSVG(bounds.width + 40, bounds.height + 40, dbConfigName);
 
         setControlsVisible(true);
 
@@ -169,12 +170,13 @@ const ChFlow: React.FC<ChFlowProps> = ({ tableNodes, transitions }) => {
     );
 };
 
-const ChFlowProvider: React.FC<ChFlowProps> = ({ tableNodes, transitions }) => {
+const ChFlowProvider: React.FC<ChFlowProps> = ({ tableNodes, transitions, dbConfigName }) => {
     return (
         <ReactFlowProvider>
             <ChFlow
                 tableNodes={tableNodes}
                 transitions={transitions}
+                dbConfigName={dbConfigName}
             />
         </ReactFlowProvider>
     );

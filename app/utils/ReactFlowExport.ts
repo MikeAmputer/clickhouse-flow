@@ -70,7 +70,7 @@ function inlineEdgeStyles(container: HTMLElement) {
   });
 }
 
-export const exportReactFlowToSVG = async (width: number, height: number) => {
+export const exportReactFlowToSVG = async (width: number, height: number, dbConfigName: string) => {
   const containerQuery = ".react-flow";
 
   const container = document.querySelector(containerQuery);
@@ -104,7 +104,7 @@ export const exportReactFlowToSVG = async (width: number, height: number) => {
 
   const a = document.createElement("a");
   a.href = svgUrl;
-  a.download = "diagram.svg";
+  a.download = `chflow_${dbConfigName}.svg`;
   a.click();
 
   setTimeout(() => iframe.remove(), 1000);

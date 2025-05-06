@@ -53,7 +53,7 @@ export default function Home() {
 
       const transitions = model.getTransitions();
 
-      setFlowProps({ tableNodes: tableNodes, transitions: transitions });
+      setFlowProps({ tableNodes: tableNodes, transitions: transitions, dbConfigName: dbConfigName });
       setCurrentDb(dbConfigName);
     });
   };
