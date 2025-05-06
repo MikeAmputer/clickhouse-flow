@@ -39,7 +39,7 @@ function inlineEdgeStyles(container: HTMLElement) {
 
   edgePaths.forEach((path) => {
     path.setAttribute("stroke", "#000");
-    path.setAttribute("stroke-width", "2");
+    path.setAttribute("stroke-width", "1");
     path.setAttribute("fill", "none");
 
     const markerId = "arrow-closed";
@@ -92,6 +92,20 @@ export const exportReactFlowToSVG = async (width: number, height: number, dbConf
   iframeDocument.head.append(iframeStyle);
 
   const clone = container.cloneNode(true) as HTMLElement;
+
+  const elementsToHide = clone.querySelectorAll('[aria-label="expand table"]');
+  elementsToHide.forEach(el => {
+    (el as HTMLElement).style.opacity = "0";
+    (el as HTMLElement).style.pointerEvents = "none";
+  });
+
+  const cellsToTrim = clone.querySelectorAll('[data-export-trim="true"]');
+  cellsToTrim.forEach((cell) => {
+    const el = cell as HTMLElement;
+    el.style.borderRightWidth = '0px';
+    el.style.borderLeftWidth = '0px';
+  });
+
   const originalTransform = getComputedStyle(container).transform;
   clone.style.transform = originalTransform;
   iframeDocument.body.append(clone);
