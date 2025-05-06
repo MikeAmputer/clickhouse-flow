@@ -1,4 +1,6 @@
 import { elementToSVG } from "dom-to-svg";
+import jsPDF from "jspdf";
+import { svg2pdf } from "svg2pdf.js";
 
 function fetchCSS(): string {
   let css = "";
@@ -44,13 +46,14 @@ function inlineEdgeStyles(container: HTMLElement) {
       arrow.setAttribute("fill", "#000");
 
       marker.appendChild(arrow);
-      const defs = svg.querySelector("defs") || svg.insertBefore(document.createElementNS("http://www.w3.org/2000/svg", "defs"), svg.firstChild);
+      const defs = svg.querySelector("defs")
+        || svg.insertBefore(document.createElementNS("http://www.w3.org/2000/svg", "defs"), svg.firstChild);
       defs.appendChild(marker);
     }
   });
 }
 
-export const exportReactFlowToSVG = async (width: number, height: number, dbConfigName: string) => {
+export const exportReactFlow = async (width: number, height: number, dbConfigName: string, format: 'PDF' | 'SVG') => {
   const containerQuery = ".react-flow";
 
   const container = document.querySelector(containerQuery);
@@ -94,13 +97,36 @@ export const exportReactFlowToSVG = async (width: number, height: number, dbConf
 
   const svgDocument = elementToSVG(iframeDocument.documentElement);
   const svgString = new XMLSerializer().serializeToString(svgDocument);
-  const svgBlob = new Blob([svgString], { type: "image/svg+xml" });
-  const svgUrl = URL.createObjectURL(svgBlob);
 
-  const a = document.createElement("a");
-  a.href = svgUrl;
-  a.download = `chflow_${dbConfigName}.svg`;
-  a.click();
+  if (format === 'SVG') {
+    const svgBlob = new Blob([svgString], { type: "image/svg+xml" });
+    const svgUrl = URL.createObjectURL(svgBlob);
+
+    const a = document.createElement("a");
+    a.href = svgUrl;
+    a.download = `chflow_${dbConfigName}.svg`;
+    a.click();
+    URL.revokeObjectURL(svgUrl);
+  }
+  else if (format === 'PDF') {
+    const pdf = new jsPDF({
+      orientation: width > height ? "landscape" : "portrait",
+      unit: "pt",
+      format: [width, height],
+    });
+
+    const parser = new DOMParser();
+    const svgElement = parser.parseFromString(svgString, "image/svg+xml").documentElement;
+
+    await svg2pdf(svgElement, pdf, {
+      x: 0,
+      y: 0,
+      width,
+      height,
+    });
+
+    pdf.save(`chflow_${dbConfigName}.pdf`);
+  }
 
   setTimeout(() => iframe.remove(), 1000);
 };

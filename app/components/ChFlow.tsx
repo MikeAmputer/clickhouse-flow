@@ -21,7 +21,7 @@ import '@xyflow/react/dist/style.css';
 
 import PrintIcon from '@mui/icons-material/Print';
 
-import { exportReactFlowToSVG } from "../utils/ReactFlowExport";
+import { exportReactFlow } from "../utils/ReactFlowExport";
 
 export type ChFlowProps = {
     tableNodes: ChTableNodeProps[];
@@ -140,7 +140,7 @@ const ChFlow: React.FC<ChFlowProps> = ({ tableNodes, transitions, dbConfigName }
         setControlsVisible(false);
         await new Promise(requestAnimationFrame);
 
-        await exportReactFlowToSVG(bounds.width + 40, bounds.height + 40, dbConfigName);
+        await exportReactFlow(bounds.width + 40, bounds.height + 40, dbConfigName, 'PDF');
 
         setControlsVisible(true);
 
