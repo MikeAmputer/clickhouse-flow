@@ -11,26 +11,6 @@ function fetchCSS(): string {
     } catch (e) { }
   }
 
-  // const reactFlowContainer = document.querySelector('.react-flow');
-  // if (reactFlowContainer) {
-  //   const computedStyles = window.getComputedStyle(reactFlowContainer);
-  //   for (let i = 0; i < computedStyles.length; i++) {
-  //     const prop = computedStyles[i];
-  //     const value = computedStyles.getPropertyValue(prop);
-  //     css += `${prop}: ${value};\n`;
-  //   }
-  // }
-
-  // const muiTables = document.querySelectorAll('.MuiTable-root');
-  // muiTables.forEach(table => {
-  //   const computedStyles = window.getComputedStyle(table);
-  //   for (let i = 0; i < computedStyles.length; i++) {
-  //     const prop = computedStyles[i];
-  //     const value = computedStyles.getPropertyValue(prop);
-  //     css += `${prop}: ${value};\n`;
-  //   }
-  // });
-
   return css;
 }
 
