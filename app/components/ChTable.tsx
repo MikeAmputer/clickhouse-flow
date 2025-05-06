@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { styled } from '@mui/material/styles';
 import ChColumn, { ChColumnProps } from './ChColumn';
-import ChEngineRow, { ChEngineRowProps } from './ChEngineRow';
+import ChEngineRow from './ChEngineRow';
 import ChTableHeader from './ChTableHeader';
 import ChEngineHeader from './ChEngineHeader';
 

@@ -1,6 +1,6 @@
 import { ChTableNodeProps } from "./ChTableNode";
 import { nodeTypes, type CustomNodeType } from "../nodes";
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import dagre from '@dagrejs/dagre';
 
 import {
@@ -12,11 +12,16 @@ import {
     useEdgesState,
     useReactFlow,
     Controls,
+    ControlButton,
     useNodesInitialized,
-    MarkerType,
+    MarkerType
 } from '@xyflow/react';
 
 import '@xyflow/react/dist/style.css';
+
+import PrintIcon from '@mui/icons-material/Print';
+
+import { exportReactFlowToSVG } from "../utils/ReactFlowExport";
 
 export type ChFlowProps = {
     tableNodes: ChTableNodeProps[];
@@ -116,6 +121,28 @@ const ChFlow: React.FC<ChFlowProps> = ({ tableNodes, transitions }) => {
         }
     }, [nodesInitialized]);
 
+    const [controlsVisible, setControlsVisible] = useState(true);
+
+    const exportFlow = async () => {
+        const bounds = reactFlowInstance.getNodesBounds(nodes);
+        const initialViewport = reactFlowInstance.getViewport();
+
+        await reactFlowInstance.setViewport({
+            x: -(bounds.x - 20),
+            y: -(bounds.y - 20),
+            zoom: 1
+        })
+
+        setControlsVisible(false);
+        await new Promise(requestAnimationFrame);
+
+        await exportReactFlowToSVG(bounds.width + 40, bounds.height + 40);
+
+        setControlsVisible(true);
+
+        await reactFlowInstance.setViewport(initialViewport);
+    };
+
     return (
         <ReactFlow
             id='clickhouse-dag-flow'
@@ -131,7 +158,13 @@ const ChFlow: React.FC<ChFlowProps> = ({ tableNodes, transitions }) => {
             snapGrid={[15, 15]}
             snapToGrid={true}
         >
-            <Controls style={{ color: '#000' }} />
+            {controlsVisible && (
+                <Controls style={{ color: '#000' }}>
+                    <ControlButton onClick={exportFlow} title="export">
+                        <PrintIcon />
+                    </ControlButton>
+                </Controls>
+            )}
         </ReactFlow>
     );
 };
