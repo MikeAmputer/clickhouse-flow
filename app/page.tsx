@@ -9,7 +9,7 @@ import { useTransition, useState, useEffect } from 'react';
 
 export default function Home() {
   const [isPending, startTransition] = useTransition();
-  const [flowProps, setFlowProps] = useState<ChFlowProps>({ tableNodes: [], transitions: [] });
+  const [flowProps, setFlowProps] = useState<ChFlowProps>({ tableNodes: [], transitions: [], dbConfigName: null });
   const [currentDb, setCurrentDb] = useState<string>('no-db-selected');
 
   const [databases, setDatabases] = useState<string[]>([]);

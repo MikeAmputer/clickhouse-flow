@@ -26,7 +26,7 @@ import { exportReactFlowToSVG } from "../utils/ReactFlowExport";
 export type ChFlowProps = {
     tableNodes: ChTableNodeProps[];
     transitions: [source: string, target: string][];
-    dbConfigName: string;
+    dbConfigName: string | null;
 };
 
 const ChFlow: React.FC<ChFlowProps> = ({ tableNodes, transitions, dbConfigName }) => {
@@ -125,6 +125,9 @@ const ChFlow: React.FC<ChFlowProps> = ({ tableNodes, transitions, dbConfigName }
     const [controlsVisible, setControlsVisible] = useState(true);
 
     const exportFlow = async () => {
+        if (!dbConfigName)
+            return;
+
         const bounds = reactFlowInstance.getNodesBounds(nodes);
         const initialViewport = reactFlowInstance.getViewport();
 
