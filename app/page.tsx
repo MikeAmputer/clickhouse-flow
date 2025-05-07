@@ -35,10 +35,21 @@ export default function Home() {
 
       const aps = await getAppSettings();
       setAppSettings(aps);
+
+      setFlowProps({
+        tableNodes: [],
+        transitions: [],
+        appSettings: aps,
+        dbConfigName: null
+      });
     })();
   }, []);
 
   const onDbSelect = (dbConfigName: string) => {
+    if (!appSettings) {
+      return;
+    }
+
     startTransition(async () => {
       const dbInfo = await getDatabaseInfo(dbConfigName);
       const presentationDatabase = dbInfo.presentationDatabase;
@@ -88,7 +99,9 @@ export default function Home() {
         callback={onDbSelect}
       />
 
-      <ChFlowProvider key={currentDb} {...flowProps} />
+      {appSettings && (
+        <ChFlowProvider key={currentDb} {...flowProps} />
+      )}
     </div>
   );
 };

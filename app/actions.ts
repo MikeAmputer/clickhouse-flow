@@ -1,6 +1,13 @@
 'use server'
 
-import { getConfig, getDatabaseConfigs, DatabaseConfig, ExportConfig } from '@/app/config';
+import {
+  getConfig,
+  getDatabaseConfigs,
+  DatabaseConfig,
+  ExportConfig,
+  CanvasConfig
+} from '@/app/config';
+
 import { createClient } from '@/app/db';
 import { ChTable, getTables } from '@/app/db/tables';
 import { ChColumn, getColumns } from '@/app/db/columns';
@@ -32,11 +39,13 @@ export async function getDatabaseInfo(configName: string): Promise<DatabaseInfo>
 
 export interface AppSettings {
   exportConfig: ExportConfig;
+  canvasConfig: CanvasConfig;
 }
 
 export async function getAppSettings(): Promise<AppSettings> {
   const config = getConfig();
   return {
     exportConfig: config.exportConfig,
+    canvasConfig: config.canvasConfig,
   }
 }

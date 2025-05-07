@@ -31,6 +31,10 @@ export type ChFlowProps = {
 };
 
 const ChFlow: React.FC<ChFlowProps> = ({ tableNodes, transitions, appSettings, dbConfigName }) => {
+    if (!appSettings) {
+        return null;
+    }
+
     const calculateTableConnections = (tableName: string) => {
         const inTables = transitions.filter(([_, target]) => target === tableName).length;
         const outTables = transitions.filter(([source, _]) => source === tableName).length;
@@ -126,7 +130,7 @@ const ChFlow: React.FC<ChFlowProps> = ({ tableNodes, transitions, appSettings, d
     const [controlsVisible, setControlsVisible] = useState(true);
 
     const exportFlow = async () => {
-        if (!dbConfigName || !appSettings) {
+        if (!dbConfigName) {
             return;
         }
 
@@ -159,7 +163,7 @@ const ChFlow: React.FC<ChFlowProps> = ({ tableNodes, transitions, appSettings, d
     return (
         <ReactFlow
             id='clickhouse-dag-flow'
-            style={{ background: '#e0e0dc' }}
+            style={{ background: appSettings.canvasConfig.backgroundColor }}
             nodes={nodes}
             edges={edges}
             onNodesChange={onNodesChange}
@@ -168,8 +172,8 @@ const ChFlow: React.FC<ChFlowProps> = ({ tableNodes, transitions, appSettings, d
             minZoom={0.1}
             maxZoom={1}
             proOptions={{ hideAttribution: true }}
-            snapGrid={[15, 15]}
-            snapToGrid={true}
+            snapGrid={[appSettings.canvasConfig.gridSize, appSettings.canvasConfig.gridSize]}
+            snapToGrid={appSettings.canvasConfig.snapToGrid}
         >
             {controlsVisible && (
                 <Controls style={{ color: '#000' }}>

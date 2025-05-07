@@ -6,6 +6,7 @@ import { ENV } from './env';
 export interface ConfigFile {
   databaseConfigs: DatabaseConfigEntry[];
   exportConfig: ExportConfig;
+  canvasConfig: CanvasConfig;
 }
 
 export interface DatabaseConfigEntry {
@@ -24,13 +25,24 @@ export interface ExportConfig {
   padding: number;
 }
 
+export interface CanvasConfig {
+  snapToGrid: boolean;
+  gridSize: number;
+  backgroundColor: string;
+}
+
 const defaultConfig: ConfigFile =
 {
   databaseConfigs: [],
   exportConfig: {
     format: 'PDF',
     padding: 20,
-  }
+  },
+  canvasConfig: {
+    snapToGrid: true,
+    gridSize: 15,
+    backgroundColor: "#e0e0dc",
+  },
 };
 
 function loadConfigFile(): ConfigFile | null {
@@ -88,8 +100,27 @@ function setupDbConfigs(config: ConfigFile) {
 function substituteEnv(config: ConfigFile) {
   config.exportConfig ??= { ...defaultConfig.exportConfig };
 
-  config.exportConfig.format = ENV.CHF_EXPORT_FORMAT ?? config.exportConfig.format ?? defaultConfig.exportConfig.format;
-  config.exportConfig.padding = ENV.CHF_EXPORT_PADDING ?? config.exportConfig.padding ?? defaultConfig.exportConfig.padding;
+  config.exportConfig.format = ENV.CHF_EXPORT_FORMAT
+    ?? config.exportConfig.format
+    ?? defaultConfig.exportConfig.format;
+
+  config.exportConfig.padding = ENV.CHF_EXPORT_PADDING
+    ?? config.exportConfig.padding
+    ?? defaultConfig.exportConfig.padding;
+
+  config.canvasConfig ??= { ...defaultConfig.canvasConfig };
+
+  config.canvasConfig.snapToGrid = ENV.CHF_CANVAS_SNAP_TO_GRID
+    ?? config.canvasConfig.snapToGrid
+    ?? defaultConfig.canvasConfig.snapToGrid;
+
+  config.canvasConfig.gridSize = ENV.CHF_CANVAS_GRID_SIZE
+    ?? config.canvasConfig.gridSize
+    ?? defaultConfig.canvasConfig.gridSize;
+
+  config.canvasConfig.backgroundColor = ENV.CHF_CANVAS_BACKGROUND_COLOR
+    ?? config.canvasConfig.backgroundColor
+    ?? defaultConfig.canvasConfig.backgroundColor;
 }
 
 let cachedConfig: ConfigFile | null = null;

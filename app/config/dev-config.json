@@ -18,5 +18,11 @@
   {
     "format": "PDF",
     "padding": 20
+  },
+  "canvasConfig":
+  {
+    "snapToGrid": true,
+    "gridSize": 15,
+    "backgroundColor": "#e0e0dc"
   }
 }
