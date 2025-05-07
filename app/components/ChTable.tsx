@@ -60,7 +60,7 @@ const ChTable: React.FC<ChTableProps> = (table) => {
     const nonEmptyEngineKeys = engineKeys.filter((key) => key[1] != null && key[1].trim() !== '');
 
     return (
-        <TableContainer component={Paper} elevation={5}>
+        <TableContainer component={Paper} elevation={5} aria-label='ch-table-container'>
             <StyledTable size={'small'} aria-label='ch-table' hasowndata={table.hasOwnData}>
                 <TableBody>
                     <ChTableHeader

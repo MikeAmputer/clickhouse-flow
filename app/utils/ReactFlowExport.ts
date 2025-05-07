@@ -79,8 +79,8 @@ export const exportReactFlow = async (width: number, height: number, dbConfigNam
   const elementsToHide = clone.querySelectorAll('[export-hide="true"]');
   elementsToHide.forEach(el => {
     const htmlEl = el as HTMLElement;
-    htmlEl.style.opacity = "0";
-    htmlEl.style.pointerEvents = "none";
+    htmlEl.style.opacity = '0';
+    htmlEl.style.pointerEvents = 'none';
   });
 
   const cellsToTrim = clone.querySelectorAll('[export-trim="true"]');
