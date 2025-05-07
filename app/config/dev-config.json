@@ -16,7 +16,7 @@
   ],
   "exportConfig":
   {
-    "format": "SVG",
+    "format": "PDF",
     "padding": 20
   }
 }
