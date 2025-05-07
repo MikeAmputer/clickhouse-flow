@@ -1,5 +1,7 @@
 import { ChTableNodeProps } from "./ChTableNode";
 import { nodeTypes, type CustomNodeType } from "../nodes";
+import { exportReactFlow } from "../utils/ReactFlowExport";
+import { type AppSettings } from "../actions";
 import { useEffect, useState } from 'react';
 import dagre from '@dagrejs/dagre';
 
@@ -21,15 +23,14 @@ import '@xyflow/react/dist/style.css';
 
 import PrintIcon from '@mui/icons-material/Print';
 
-import { exportReactFlow } from "../utils/ReactFlowExport";
-
 export type ChFlowProps = {
     tableNodes: ChTableNodeProps[];
     transitions: [source: string, target: string][];
+    appSettings: AppSettings | null,
     dbConfigName: string | null;
 };
 
-const ChFlow: React.FC<ChFlowProps> = ({ tableNodes, transitions, dbConfigName }) => {
+const ChFlow: React.FC<ChFlowProps> = ({ tableNodes, transitions, appSettings, dbConfigName }) => {
     const calculateTableConnections = (tableName: string) => {
         const inTables = transitions.filter(([_, target]) => target === tableName).length;
         const outTables = transitions.filter(([source, _]) => source === tableName).length;
@@ -125,22 +126,30 @@ const ChFlow: React.FC<ChFlowProps> = ({ tableNodes, transitions, dbConfigName }
     const [controlsVisible, setControlsVisible] = useState(true);
 
     const exportFlow = async () => {
-        if (!dbConfigName)
+        if (!dbConfigName || !appSettings) {
             return;
+        }
+
+        const padding = appSettings.exportConfig.padding;
 
         const bounds = reactFlowInstance.getNodesBounds(nodes);
         const initialViewport = reactFlowInstance.getViewport();
 
         await reactFlowInstance.setViewport({
-            x: -(bounds.x - 20),
-            y: -(bounds.y - 20),
+            x: -(bounds.x - padding),
+            y: -(bounds.y - padding),
             zoom: 1
         })
 
         setControlsVisible(false);
         await new Promise(requestAnimationFrame);
 
-        await exportReactFlow(bounds.width + 40, bounds.height + 40, dbConfigName, 'PDF');
+        await exportReactFlow(
+            bounds.width + padding * 2,
+            bounds.height + padding * 2,
+            dbConfigName,
+            appSettings.exportConfig.format
+        );
 
         setControlsVisible(true);
 
@@ -173,12 +182,13 @@ const ChFlow: React.FC<ChFlowProps> = ({ tableNodes, transitions, dbConfigName }
     );
 };
 
-const ChFlowProvider: React.FC<ChFlowProps> = ({ tableNodes, transitions, dbConfigName }) => {
+const ChFlowProvider: React.FC<ChFlowProps> = ({ tableNodes, transitions, appSettings, dbConfigName }) => {
     return (
         <ReactFlowProvider>
             <ChFlow
                 tableNodes={tableNodes}
                 transitions={transitions}
+                appSettings={appSettings}
                 dbConfigName={dbConfigName}
             />
         </ReactFlowProvider>

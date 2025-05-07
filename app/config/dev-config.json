@@ -13,5 +13,10 @@
         "presentationDatabase": "flow_test"
       }
     }
-  ]
+  ],
+  "exportConfig":
+  {
+    "format": "SVG",
+    "padding": 20
+  }
 }

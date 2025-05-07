@@ -5,6 +5,7 @@ import { ENV } from './env';
 
 export interface ConfigFile {
   databaseConfigs: DatabaseConfigEntry[];
+  exportConfig: ExportConfig;
 }
 
 export interface DatabaseConfigEntry {
@@ -18,7 +19,21 @@ export interface DatabaseConfig {
   presentationDatabase: string;
 }
 
-function getDefaultDatabaseConfig(): DatabaseConfig | null {
+export interface ExportConfig {
+  format: 'PDF' | 'SVG';
+  padding: number;
+}
+
+const defaultConfig: ConfigFile =
+{
+  databaseConfigs: [],
+  exportConfig: {
+    format: 'PDF',
+    padding: 20,
+  }
+};
+
+function getDefaultDatabaseConfig(): { dbConfig: DatabaseConfig, configName: string } | null {
   const {
     CHF_DEFAULT_DB_URL: url,
     CHF_DEFAULT_DB_USERNAME: username,
@@ -27,9 +42,12 @@ function getDefaultDatabaseConfig(): DatabaseConfig | null {
 
   if (url && username && password && name) {
     return {
-      connectionSettings: { url, username, password },
-      targetDatabases: [name],
-      presentationDatabase: name,
+      dbConfig: {
+        connectionSettings: { url, username, password },
+        targetDatabases: [name],
+        presentationDatabase: name,
+      },
+      configName: ENV.CHF_DEFAULT_DB_CONFIG_NAME ?? name
     };
   }
 
@@ -39,7 +57,7 @@ function getDefaultDatabaseConfig(): DatabaseConfig | null {
 function loadConfigFile(): ConfigFile | null {
   const configPath: string = ENV.NODE_ENV !== 'production'
     ? path.resolve('./app/config/dev-config.json')
-    : ENV.CHF_CONFIG_PATH || '/app/config/config.json';
+    : ENV.CHF_CONFIG_PATH;
 
   try {
     if (fs.existsSync(configPath)) {
@@ -52,10 +70,11 @@ function loadConfigFile(): ConfigFile | null {
   return null;
 }
 
-function createEmptyConfig(): ConfigFile {
-  return {
-    databaseConfigs: [],
-  }
+function substituteEnv(config: ConfigFile) {
+  config.exportConfig ??= { ...defaultConfig.exportConfig };
+
+  config.exportConfig.format = ENV.CHF_EXPORT_FORMAT ?? config.exportConfig.format ?? defaultConfig.exportConfig.format;
+  config.exportConfig.padding = ENV.CHF_EXPORT_PADDING ?? config.exportConfig.padding ?? defaultConfig.exportConfig.padding;
 }
 
 let cachedConfig: ConfigFile | null = null;
@@ -65,20 +84,24 @@ export function getConfig(): ConfigFile {
     return cachedConfig;
   }
 
-  const config = loadConfigFile() ?? createEmptyConfig();
+  const config = loadConfigFile() ?? structuredClone(defaultConfig);
 
   const defaultDbConfig = getDefaultDatabaseConfig();
 
   if (defaultDbConfig) {
     const defaultEntry: DatabaseConfigEntry = {
-      name: 'default',
-      config: defaultDbConfig,
+      name: defaultDbConfig.configName,
+      config: defaultDbConfig.dbConfig,
     };
 
     config.databaseConfigs.unshift(defaultEntry);
   }
 
-  cachedConfig = config;
+  substituteEnv(config);
+
+  if (ENV.CHF_CACHE_CONFIG) {
+    cachedConfig = config;
+  }
 
   return config;
 }

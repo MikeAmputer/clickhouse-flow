@@ -1,23 +1,40 @@
 'use client'
 
+import { useTransition, useState, useEffect } from 'react';
 import { ChTableNodeProps } from './components/ChTableNode';
 import DatabaseSelector from './components/DatabaseSelector';
 import ChFlowProvider, { ChFlowProps } from './components/ChFlow';
 import { ChModel } from './classes/ChModel';
-import { getDatabaseInfo, getAvailableDatabases } from '@/app/actions';
-import { useTransition, useState, useEffect } from 'react';
+
+import {
+  getDatabaseInfo,
+  getAvailableDatabases,
+  type AppSettings,
+  getAppSettings
+} from '@/app/actions';
 
 export default function Home() {
   const [isPending, startTransition] = useTransition();
-  const [flowProps, setFlowProps] = useState<ChFlowProps>({ tableNodes: [], transitions: [], dbConfigName: null });
+
+  const [flowProps, setFlowProps] = useState<ChFlowProps>({
+    tableNodes: [],
+    transitions: [],
+    appSettings: null,
+    dbConfigName: null
+  });
+
   const [currentDb, setCurrentDb] = useState<string>('no-db-selected');
 
   const [databases, setDatabases] = useState<string[]>([]);
+  const [appSettings, setAppSettings] = useState<AppSettings | null>(null);
 
   useEffect(() => {
     (async () => {
       const dbs = await getAvailableDatabases();
       setDatabases(dbs);
+
+      const aps = await getAppSettings();
+      setAppSettings(aps);
     })();
   }, []);
 
@@ -53,7 +70,13 @@ export default function Home() {
 
       const transitions = model.getTransitions();
 
-      setFlowProps({ tableNodes: tableNodes, transitions: transitions, dbConfigName: dbConfigName });
+      setFlowProps({
+        tableNodes: tableNodes,
+        transitions: transitions,
+        appSettings: appSettings,
+        dbConfigName: dbConfigName
+      });
+
       setCurrentDb(dbConfigName);
     });
   };
