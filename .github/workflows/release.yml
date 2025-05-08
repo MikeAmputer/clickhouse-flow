@@ -28,6 +28,8 @@ jobs:
           -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
           https://ghcr.io/v2/${{ github.repository_owner }}/$IMAGE_NAME/manifests/$VERSION)
 
+        echo "Status: $STATUS"
+
         if [ "$STATUS" = "200" ]; then
           echo "$IMAGE_NAME image tag $VERSION already exists on GHCR."
           exit 1
