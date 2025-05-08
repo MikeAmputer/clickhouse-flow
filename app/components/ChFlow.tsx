@@ -121,7 +121,10 @@ const ChFlow: React.FC<ChFlowProps> = ({ tableNodes, transitions, appSettings, d
 
             reactFlowInstance.setEdges(calculateEdges(orderedTransitions));
         }
-    }, [nodesInitialized]);
+    },
+        // eslint-disable-next-line react-hooks/exhaustive-deps 
+        [nodesInitialized]
+    );
 
     const [controlsVisible, setControlsVisible] = useState(true);
 
