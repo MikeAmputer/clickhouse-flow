@@ -1,0 +1,36 @@
+name: Manual release
+
+on:
+  workflow_dispatch:
+
+env:
+  IMAGE_NAME: ch-flow
+
+jobs:
+  build-and-push:
+    name: Build and Push
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Extract version from package.json
+      run: |
+        VERSION=$(jq -r .version package.json)
+        echo "VERSION=$VERSION" >> "$GITHUB_ENV"
+        echo "Version extracted from package.json: $VERSION"
+
+    - name: Validate version tag does not exist on GHCR
+      run: |
+        IMAGE_URL=ghcr.io/${{ github.repository_owner }}/$IMAGE_NAME
+        STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
+          -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+          https://ghcr.io/v2/${{ github.repository_owner }}/$IMAGE_NAME/manifests/$VERSION)
+
+        if [ "$STATUS" = "200" ]; then
+          echo "$IMAGE_NAME image tag $VERSION already exists on GHCR."
+          exit 1
+        else
+          echo "$IMAGE_NAME image tag $VERSION does not exist yet."
+        fi
