@@ -63,10 +63,10 @@ function loadConfigFile(): ConfigFile | null {
 
 function getDefaultDatabaseConfig(): { dbConfig: DatabaseConfig, configName: string } | null {
   const {
-    CHF_DEFAULT_DB_URL: url,
-    CHF_DEFAULT_DB_USERNAME: username,
-    CHF_DEFAULT_DB_PASSWORD: password,
-    CHF_DEFAULT_DB_NAME: name } = ENV;
+    CHF_DB_URL: url,
+    CHF_DB_USERNAME: username,
+    CHF_DB_PASSWORD: password,
+    CHF_DB_NAME: name } = ENV;
 
   if (url && username && password && name) {
     return {
@@ -75,7 +75,7 @@ function getDefaultDatabaseConfig(): { dbConfig: DatabaseConfig, configName: str
         targetDatabases: [name],
         presentationDatabase: name,
       },
-      configName: ENV.CHF_DEFAULT_DB_CONFIG_NAME ?? name
+      configName: ENV.CHF_DB_CONFIG_NAME ?? name
     };
   }
 
