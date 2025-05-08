@@ -25,14 +25,20 @@ jobs:
         echo "VERSION=$VERSION" >> "$GITHUB_ENV"
         echo "Version extracted from package.json: $VERSION"
 
+    - name: Set image namespace variable
+      run: |
+        NAMESPACE=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
+        echo "NAMESPACE=$NAMESPACE" >> "$GITHUB_ENV"
+        echo "Namespace: $NAMESPACE"
+
     - name: Login to GHCR
       run: echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
     - name: Validate version tag does not exist on GHCR
       run: |
-        if docker manifest inspect ghcr.io/${{ github.repository_owner }}/my-image:${{ env.VERSION }}; then
-          echo "$IMAGE_NAME image tag $VERSION already exists on GHCR."
+        if docker manifest inspect ghcr.io/$NAMESPACE/$IMAGE_NAME:$VERSION; then
+          echo "$NAMESPACE/$IMAGE_NAME image tag $VERSION already exists on GHCR."
           exit 1
         else
-          echo "$IMAGE_NAME image tag $VERSION does not exist yet."
+          echo "$NAMESPACE/$IMAGE_NAME image tag $VERSION does not exist yet."
         fi
