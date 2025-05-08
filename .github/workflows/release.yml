@@ -36,7 +36,7 @@ jobs:
 
     - name: Validate version tag does not exist on GHCR
       run: |
-        if docker manifest inspect ghcr.io/$NAMESPACE/$IMAGE_NAME:$VERSION; then
+        if docker manifest inspect ghcr.io/${{ env.NAMESPACE }}/${{ env.IMAGE_NAME }}:${{ env.VERSION }}; then
           echo "$NAMESPACE/$IMAGE_NAME image tag $VERSION already exists on GHCR."
           exit 1
         else
