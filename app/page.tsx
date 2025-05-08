@@ -94,13 +94,16 @@ export default function Home() {
 
   return (
     <div style={{ height: '100vh' }}>
-      <DatabaseSelector
-        databases={databases}
-        callback={onDbSelect}
-      />
-
       {appSettings && (
-        <ChFlowProvider key={currentDb} {...flowProps} />
+        <>
+          <DatabaseSelector
+            databases={databases}
+            callback={onDbSelect}
+          />
+
+
+          <ChFlowProvider key={currentDb} {...flowProps} />
+        </>
       )}
     </div>
   );
