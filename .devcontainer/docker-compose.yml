@@ -28,15 +28,14 @@ services:
     image: ghcr.io/mikeamputer/ch-flow:latest
     container_name: ch-flow
     environment:
-      CHF_DB_URL: "http://clickhouse:8123"
-      CHF_DB_USERNAME: "developer"
-      CHF_DB_PASSWORD: "developer"
-      CHF_DB_NAME: "demo"
+      - CHF_DB_URL=http://clickhouse:8123
+      - CHF_DB_USERNAME=developer
+      - CHF_DB_PASSWORD=developer
+      - CHF_DB_NAME=demo
     ports:
       - "3000:3000"
     depends_on:
       - clickhouse
-
 
 volumes:
   clickhouse-data:
