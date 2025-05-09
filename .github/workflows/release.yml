@@ -48,6 +48,11 @@ jobs:
       uses: kitabisa/docker-slim-action@v1
       env:
         DSLIM_HTTP_PROBE: false
+        DSLIM_INCLUDE_PATH: |
+          /app/node_modules/next/dist/server/normalizers/built
+          /app/node_modules/next/dist/server/route-matcher-providers
+          /app/node_modules/next/dist/server/lib
+          /app/server.js
       with:
         target: ${{ env.IMAGE_NAME }}:current
         tag: ${{ env.VERSION }}-slim
