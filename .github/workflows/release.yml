@@ -59,4 +59,13 @@ jobs:
         docker tag ${{ env.IMAGE_NAME }}:${{ env.VERSION }}-slim ghcr.io/${{ env.NAMESPACE }}/${{ env.IMAGE_NAME }}:${{ env.VERSION }}-slim
 
     - name: List local docker images
-      run: docker images --format "table {{.Repository}}\t{{.Tag}}\t{{.ID}}"
+      run: docker images --format "table {{.Repository}}\t{{.Tag}}\t{{.ID}}\t{{.Size}}"
+
+    - name: Login to GHCR
+      run: echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+    - name: Push to GHCR
+      run: |
+        docker push ghcr.io/${{ env.NAMESPACE }}/${{ env.IMAGE_NAME }}:latest
+        docker push ghcr.io/${{ env.NAMESPACE }}/${{ env.IMAGE_NAME }}:${{ env.VERSION }}
+        docker push ghcr.io/${{ env.NAMESPACE }}/${{ env.IMAGE_NAME }}:${{ env.VERSION }}-slim
