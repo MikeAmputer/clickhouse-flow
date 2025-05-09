@@ -1,0 +1,41 @@
+services:
+  devcontainer:
+    image: mcr.microsoft.com/devcontainers/base:latest
+    container_name: devcontainer
+    command: sleep infinity
+    volumes:
+      - ..:/workspace
+    depends_on:
+      - clickhouse
+      - ch-flow
+
+  clickhouse:
+    image: clickhouse/clickhouse-server:25.4
+    container_name: clickhouse
+    restart: unless-stopped
+    environment:
+      - CLICKHOUSE_USER=developer
+      - CLICKHOUSE_PASSWORD=developer
+      - CLICKHOUSE_DB=demo
+    ports:
+      - "8123:8123"
+      - "9000:9000"
+    volumes:
+      - clickhouse-data:/var/lib/clickhouse
+  
+  ch-flow:
+    image: ghcr.io/mikeamputer/ch-flow:latest
+    container_name: ch-flow
+    environment:
+      CHF_DB_URL: "http://clickhouse:8123"
+      CHF_DB_USERNAME: "developer"
+      CHF_DB_PASSWORD: "developer"
+      CHF_DB_NAME: "demo"
+    ports:
+      - "3000:3000"
+    depends_on:
+      - clickhouse
+
+
+volumes:
+  clickhouse-data:

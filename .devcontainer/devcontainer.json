@@ -1,0 +1,10 @@
+{
+  "dockerComposeFile": ["docker-compose.yml"],
+  "service": "devcontainer",
+  "workspaceFolder": "/workspace",
+  "hostRequirements": {
+   "cpus": 2,
+   "memory": "8gb",
+   "storage": "8gb"
+  }
+}
