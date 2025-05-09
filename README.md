@@ -44,3 +44,5 @@ services:
     ports:
       - "3000:3000"
 ```
+
+You can customize behavior using [environment variables](https://github.com/MikeAmputer/clickhouse-flow/wiki/Environment-Variables) or mounting a custom [config file](https://github.com/MikeAmputer/clickhouse-flow/wiki/Config-File).
