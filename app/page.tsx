@@ -30,18 +30,22 @@ export default function Home() {
 
   useEffect(() => {
     (async () => {
-      const dbs = await getAvailableDatabases();
-      setDatabases(dbs);
+      try {
+        const dbs = await getAvailableDatabases();
+        setDatabases(dbs);
 
-      const aps = await getAppSettings();
-      setAppSettings(aps);
+        const aps = await getAppSettings();
+        setAppSettings(aps);
 
-      setFlowProps({
-        tableNodes: [],
-        transitions: [],
-        appSettings: aps,
-        dbConfigName: null
-      });
+        setFlowProps({
+          tableNodes: [],
+          transitions: [],
+          appSettings: aps,
+          dbConfigName: null
+        });
+      } catch (error) {
+        console.error('Failed to initialize app settings:', error);
+      }
     })();
   }, []);
 
