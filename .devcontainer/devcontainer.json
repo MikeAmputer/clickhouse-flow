@@ -2,7 +2,7 @@
   "dockerComposeFile": ["docker-compose.yml"],
   "service": "devcontainer",
   "workspaceFolder": "/workspace",
-  "forwardPorts": [3000, 8123, 9000],
+  "forwardPorts": [3000, 8123],
   "hostRequirements": {
    "cpus": 2,
    "memory": "8gb",
