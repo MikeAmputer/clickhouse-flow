@@ -31,9 +31,6 @@ jobs:
         echo "NAMESPACE=$NAMESPACE" >> "$GITHUB_ENV"
         echo "Namespace: $NAMESPACE"
 
-    - name: Login to GHCR
-      run: echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
-
     - name: Validate version tag does not exist on GHCR
       run: |
         if docker manifest inspect ghcr.io/${{ env.NAMESPACE }}/${{ env.IMAGE_NAME }}:${{ env.VERSION }}; then
@@ -45,10 +42,21 @@ jobs:
 
     - name: Build docker image
       run: |
-        docker build -t ghcr.io/${{ env.NAMESPACE }}/${{ env.IMAGE_NAME }}:latest \
-                     -t ghcr.io/${{ env.NAMESPACE }}/${{ env.IMAGE_NAME }}:${{ env.VERSION }} .
+        docker build -t ${{ env.IMAGE_NAME }}:current .
 
-    - name: Push docker image
+    - name: Build slim docker image
+      uses: kitabisa/docker-slim-action@v1
+      env:
+        DSLIM_HTTP_PROBE: false
+      with:
+        target: ${{ env.IMAGE_NAME }}:current
+        tag: ${{ env.VERSION }}-slim
+
+    - name: Tag docker image
       run: |
-        docker push ghcr.io/${{ env.NAMESPACE }}/${{ env.IMAGE_NAME }}:latest
-        docker push ghcr.io/${{ env.NAMESPACE }}/${{ env.IMAGE_NAME }}:${{ env.VERSION }}
+        docker tag ${{ env.IMAGE_NAME }}:current ghcr.io/${{ env.NAMESPACE }}/${{ env.IMAGE_NAME }}:latest
+        docker tag ${{ env.IMAGE_NAME }}:current ghcr.io/${{ env.NAMESPACE }}/${{ env.IMAGE_NAME }}:${{ env.VERSION }}
+        docker tag ${{ env.IMAGE_NAME }}:${{ env.VERSION }}-slim ghcr.io/${{ env.NAMESPACE }}/${{ env.IMAGE_NAME }}:${{ env.VERSION }}-slim
+
+    - name: List local docker images
+      run: docker images --format "table {{.Repository}}\t{{.Tag}}\t{{.ID}}"
