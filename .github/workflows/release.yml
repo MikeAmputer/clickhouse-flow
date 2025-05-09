@@ -50,10 +50,7 @@ jobs:
         DSLIM_HTTP_PROBE: true
         DSLIM_HTTP_PROBE_PORT: 3000
         DSLIM_INCLUDE_PATH: |
-          /app/node_modules/next/dist/server
-          /app/node_modules/next/dist/lib
-          /app/server.js
-          /app/.next
+          /app
       with:
         target: ${{ env.IMAGE_NAME }}:current
         tag: ${{ env.VERSION }}-slim
