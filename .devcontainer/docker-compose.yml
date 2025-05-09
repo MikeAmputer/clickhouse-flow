@@ -17,9 +17,10 @@ services:
       - CLICKHOUSE_USER=developer
       - CLICKHOUSE_PASSWORD=developer
       - CLICKHOUSE_DB=demo
+    expose:
+      - "8123"
     ports:
       - "8123:8123"
-      - "9000:9000"
     volumes:
       - clickhouse-data:/var/lib/clickhouse
   
