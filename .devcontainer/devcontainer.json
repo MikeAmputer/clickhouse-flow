@@ -7,5 +7,13 @@
    "cpus": 2,
    "memory": "8gb",
    "storage": "8gb"
+  },
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "workbench.colorTheme": "Default Dark+",
+        "locale": "en"
+      }
+    }
   }
 }
