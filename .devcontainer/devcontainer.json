@@ -4,16 +4,11 @@
   "workspaceFolder": "/workspace",
   "forwardPorts": [3000, 8123],
   "hostRequirements": {
-   "cpus": 2,
-   "memory": "8gb",
-   "storage": "8gb"
+    "cpus": 2,
+    "memory": "8gb",
+    "storage": "8gb"
   },
-  "customizations": {
-    "vscode": {
-      "settings": {
-        "workbench.colorTheme": "Default Dark+",
-        "locale": "en"
-      }
-    }
+  "features": {
+    "ghcr.io/devcontainers/features/docker-outside-of-docker": {}
   }
 }
