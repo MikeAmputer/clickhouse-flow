@@ -98,6 +98,8 @@ function setupDbConfigs(config: ConfigFile) {
     };
 
     config.databaseConfigs.unshift(defaultEntry);
+
+    // TODO: default values for db configs missing properties
   }
 }
 

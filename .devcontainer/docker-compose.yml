@@ -1,14 +1,4 @@
 services:
-  devcontainer:
-    image: mcr.microsoft.com/devcontainers/base:latest
-    container_name: devcontainer
-    command: sleep infinity
-    volumes:
-      - ..:/workspace
-    depends_on:
-      - clickhouse
-      - ch-flow
-
   clickhouse:
     image: clickhouse/clickhouse-server:25.4
     container_name: clickhouse
@@ -16,26 +6,56 @@ services:
     environment:
       - CLICKHOUSE_USER=developer
       - CLICKHOUSE_PASSWORD=developer
-      - CLICKHOUSE_DB=demo
+      - CLICKHOUSE_DB=migrations
     expose:
       - "8123"
     ports:
       - "8123:8123"
     volumes:
       - clickhouse-data:/var/lib/clickhouse
+    healthcheck:
+      test: ["CMD-SHELL", "clickhouse-client --query 'SELECT 1'"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  ch-migrator:
+    image: alpine:3.21
+    container_name: ch-migrator
+    environment:
+      - CLICKHOUSE_HOST=clickhouse
+      - CLICKHOUSE_PORT=8123
+      - CLICKHOUSE_USER=developer
+      - CLICKHOUSE_PASSWORD=developer
+      - CLICKHOUSE_DB=migrations
+      - MIGRATIONS_DIR=/migrations
+    volumes:
+      - ./migrations:/migrations
+      - ./run-migrations.sh:/run-migrations.sh
+    depends_on:
+      clickhouse:
+        condition: service_healthy
+    command: sh -c "apk add --no-cache curl && sh /run-migrations.sh"
   
   ch-flow:
     image: ghcr.io/mikeamputer/ch-flow:latest
     container_name: ch-flow
-    environment:
-      - CHF_DB_URL=http://clickhouse:8123
-      - CHF_DB_USERNAME=developer
-      - CHF_DB_PASSWORD=developer
-      - CHF_DB_NAME=demo
     ports:
       - "3000:3000"
+    volumes:
+      - ./ch-flow.config.json:/app/config/config.json
     depends_on:
-      - clickhouse
+      ch-migrator:
+        condition: service_completed_successfully
+  
+  devcontainer:
+    image: mcr.microsoft.com/devcontainers/base:latest
+    container_name: devcontainer
+    command: sleep infinity
+    volumes:
+      - ..:/workspace
+    depends_on:
+      - ch-flow
 
 volumes:
   clickhouse-data:

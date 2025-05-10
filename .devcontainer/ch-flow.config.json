@@ -1,0 +1,31 @@
+{
+  "databaseConfigs":
+  [
+    {
+      "name": "shop_demo",
+      "config": {
+        "connectionSettings": {
+          "url": "http://clickhouse:8123",
+          "username": "developer",
+          "password": "developer"
+        },
+        "targetDatabases": ["shop_demo"],
+        "presentationDatabase": "shop_demo",
+        "respectJoins": true
+      }
+    },
+    {
+      "name": "bank_demo",
+      "config": {
+        "connectionSettings": {
+          "url": "http://clickhouse:8123",
+          "username": "developer",
+          "password": "developer"
+        },
+        "targetDatabases": ["bank_demo"],
+        "presentationDatabase": "bank_demo",
+        "respectJoins": true
+      }
+    }
+  ]
+}
