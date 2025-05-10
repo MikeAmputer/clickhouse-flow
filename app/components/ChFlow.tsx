@@ -120,6 +120,10 @@ const ChFlow: React.FC<ChFlowProps> = ({ tableNodes, transitions, appSettings, d
                 .toSorted((a, b) => transitionPriorities[a[1]] - transitionPriorities[b[1]]);
 
             reactFlowInstance.setEdges(calculateEdges(orderedTransitions));
+
+            if (appSettings?.canvasConfig.autoFitView) {
+                reactFlowInstance.fitView();
+            }
         }
     },
         // eslint-disable-next-line react-hooks/exhaustive-deps 

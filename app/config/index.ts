@@ -18,6 +18,7 @@ export interface DatabaseConfig {
   connectionSettings: ChConnectionSettings;
   targetDatabases: string[];
   presentationDatabase: string;
+  respectJoins: boolean;
 }
 
 export interface ExportConfig {
@@ -29,6 +30,7 @@ export interface CanvasConfig {
   snapToGrid: boolean;
   gridSize: number;
   backgroundColor: string;
+  autoFitView: boolean;
 }
 
 const defaultConfig: ConfigFile =
@@ -42,6 +44,7 @@ const defaultConfig: ConfigFile =
     snapToGrid: true,
     gridSize: 15,
     backgroundColor: "#e0e0dc",
+    autoFitView: true,
   },
 };
 
@@ -74,6 +77,7 @@ function getDefaultDatabaseConfig(): { dbConfig: DatabaseConfig, configName: str
         connectionSettings: { url, username, password },
         targetDatabases: [name],
         presentationDatabase: name,
+        respectJoins: true,
       },
       configName: ENV.CHF_DB_CONFIG_NAME ?? name
     };
@@ -121,6 +125,10 @@ function substituteEnv(config: ConfigFile) {
   config.canvasConfig.backgroundColor = ENV.CHF_CANVAS_BACKGROUND_COLOR
     ?? config.canvasConfig.backgroundColor
     ?? defaultConfig.canvasConfig.backgroundColor;
+
+  config.canvasConfig.autoFitView = ENV.CHF_CANVAS_AUTO_FIT_VIEW
+    ?? config.canvasConfig.autoFitView
+    ?? defaultConfig.canvasConfig.autoFitView;
 }
 
 let cachedConfig: ConfigFile | null = null;

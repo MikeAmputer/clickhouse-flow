@@ -5,7 +5,7 @@ export class ChModel {
     private tables: Map<string, TableEntry>;
     private transitions: TableTransition[];
 
-    constructor(tables: ChTable[], columns: ChColumn[]) {
+    constructor(tables: ChTable[], columns: ChColumn[], respectJoins: boolean) {
         this.tables = new Map();
         this.transitions = [];
 
@@ -25,7 +25,7 @@ export class ChModel {
 
         this.tables.forEach((entry, key) => {
             entry.columns.sort((a, b) => a.position - b.position);
-            const tableTransitions = composeTransitions(entry.table.createCommand, key);
+            const tableTransitions = composeTransitions(entry.table.createCommand, key, respectJoins);
             tableTransitions.forEach((transition) => {
                 if (this.tables.has(transition.source) && this.tables.has(transition.target)) {
                     this.transitions.push(transition);
@@ -61,7 +61,7 @@ const composeFullTableName = (database: string, table: string): string => {
 const composeTransitions = (
     createCommand: string,
     fullName: string,
-    includeJoins: boolean = false): TableTransition[] => {
+    respectJoins: boolean = false): TableTransition[] => {
 
     const toRegex = /TO\s+(?:`([^`]+)`|([a-zA-Z0-9_]+))\.(?:`([^`]+)`|([a-zA-Z0-9_]+))\s+/gi;
     const fromRegex = /FROM\s+(?:`([^`]+)`|([a-zA-Z0-9_]+))\.(?:`([^`]+)`|([a-zA-Z0-9_]+))(?:\s+|$)/gi;
@@ -79,7 +79,7 @@ const composeTransitions = (
             result.push(t);
         });
 
-    if (includeJoins) {
+    if (respectJoins) {
         matchTransitions(createCommand, fullName, false, joinRegex)
             .forEach((t) => {
                 result.push(t);

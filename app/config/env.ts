@@ -16,6 +16,7 @@ export const ENV = parseEnv(process.env, {
 
   CHF_CANVAS_SNAP_TO_GRID: z.coerce.boolean().optional(),
   CHF_CANVAS_GRID_SIZE: z.coerce.number().int().positive().optional(),
+  CHF_CANVAS_AUTO_FIT_VIEW: z.coerce.boolean().optional(),
   CHF_CANVAS_BACKGROUND_COLOR: z
     .string()
     .nonempty()

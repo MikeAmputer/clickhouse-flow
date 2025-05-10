@@ -20,6 +20,7 @@ export interface DatabaseInfo {
   tables: ChTable[];
   columns: ChColumn[];
   presentationDatabase: string;
+  respectJoins: boolean;
 }
 
 export async function getDatabaseInfo(configName: string): Promise<DatabaseInfo> {
@@ -34,7 +35,12 @@ export async function getDatabaseInfo(configName: string): Promise<DatabaseInfo>
 
   client.close();
 
-  return { tables, columns, presentationDatabase: databaseConfig.presentationDatabase };
+  return {
+    tables,
+    columns,
+    presentationDatabase: databaseConfig.presentationDatabase,
+    respectJoins: databaseConfig.respectJoins,
+  };
 }
 
 export interface AppSettings {

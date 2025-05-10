@@ -10,7 +10,8 @@
           "password": "developer"
         },
         "targetDatabases": ["flow_test"],
-        "presentationDatabase": "flow_test"
+        "presentationDatabase": "flow_test",
+        "respectJoins": true
       }
     }
   ],
@@ -23,6 +24,7 @@
   {
     "snapToGrid": true,
     "gridSize": 15,
-    "backgroundColor": "#e0e0dc"
+    "backgroundColor": "#e0e0dc",
+    "autoFitView": true
   }
 }

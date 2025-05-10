@@ -57,7 +57,7 @@ export default function Home() {
     startTransition(async () => {
       const dbInfo = await getDatabaseInfo(dbConfigName);
       const presentationDatabase = dbInfo.presentationDatabase;
-      const model = new ChModel(dbInfo.tables, dbInfo.columns);
+      const model = new ChModel(dbInfo.tables, dbInfo.columns, dbInfo.respectJoins);
 
       const tableNodes = model.getTables<ChTableNodeProps>((entry) => {
         const table = entry.table;
