@@ -6,7 +6,7 @@ Web service for visualizing ClickHouse data flows. Primarily designed for develo
 - Supports multiple database configurations
 
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/a829f38f-716b-4403-94f3-56e4fda0f135" alt="Example flow" width="75%"/>
+  <img src="https://github.com/user-attachments/assets/57b19456-3363-4c41-8306-2bf2ecc1e66f" alt="Example flow" width="75%"/>
 </p>
 
 ## Quick Setup
@@ -46,3 +46,14 @@ services:
 ```
 
 You can customize behavior using [environment variables](https://github.com/MikeAmputer/clickhouse-flow/wiki/Environment-Variables) or mounting a custom [config file](https://github.com/MikeAmputer/clickhouse-flow/wiki/Config-File).
+
+## Demo
+
+**Try it instantly in your browser using GitHub Codespaces:**
+
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/mikeamputer/clickhouse-flow?quickstart=1)
+
+1. Click the link above to create a new Codespace
+1. Wait a few minutes for the Codespace to initialize
+1. Open **Ports** tab: `Ctrl+Shift+P` > `View: Toggle Ports`
+1. Locate the forwarded port `3000` and open it in a new browser tab
