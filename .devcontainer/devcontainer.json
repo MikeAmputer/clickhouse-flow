@@ -4,9 +4,10 @@
   "workspaceFolder": "/workspace",
   "forwardPorts": [3000, 8123],
   "portsAttributes": {
-  "3000": {
-    "label": "ch-flow",
-    "onAutoForward": "openBrowser"
+    "3000": {
+      "label": "ch-flow",
+      "onAutoForward": "openBrowser"
+    }
   },
   "hostRequirements": {
     "cpus": 2,
