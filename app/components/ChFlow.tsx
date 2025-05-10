@@ -141,12 +141,23 @@ const ChFlow: React.FC<ChFlowProps> = ({ tableNodes, transitions, appSettings, d
 
         const bounds = reactFlowInstance.getNodesBounds(nodes);
         const initialViewport = reactFlowInstance.getViewport();
+        initialViewport.x += bounds.x * initialViewport.zoom;
+        initialViewport.y += bounds.y * initialViewport.zoom;
 
         await reactFlowInstance.setViewport({
-            x: -(bounds.x - padding),
-            y: -(bounds.y - padding),
+            x: padding,
+            y: padding,
             zoom: 1
         })
+
+        nodes.forEach(node => {
+            reactFlowInstance.updateNode(node.id, {
+                position: {
+                    x: node.position.x - bounds.x,
+                    y: node.position.y - bounds.y
+                }
+            });
+        });
 
         setControlsVisible(false);
         await new Promise(requestAnimationFrame);
