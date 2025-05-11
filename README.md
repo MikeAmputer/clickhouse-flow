@@ -1,4 +1,9 @@
 # ch-flow
+
+[![Docker](https://img.shields.io/badge/docker-ch--flow-blue?logo=docker)](https://hub.docker.com/r/mikeamputer/ch-flow)
+[![GHCR](https://img.shields.io/badge/ghcr.io-ch--flow-blue?logo=github)](https://github.com/MikeAmputer/clickhouse-flow/pkgs/container/ch-flow)
+[![Wiki](https://img.shields.io/badge/wiki-docs-lightgrey?logo=github)](https://github.com/MikeAmputer/clickhouse-flow/wiki)
+
 Web service for visualizing ClickHouse data flows. Primarily designed for development environments, it helps developers quickly understand and explore data dependencies and transformation paths in their local or dev setups.
 
 - Renders a directed acyclic graph of tables, views, and materialized views.
