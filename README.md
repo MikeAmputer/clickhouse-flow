@@ -18,7 +18,7 @@ docker run -d -p 3000:3000 \
   -e CHF_DB_USERNAME="developer" \
   -e CHF_DB_PASSWORD="developer" \
   -e CHF_DB_NAME="my_db" \
-  ghcr.io/mikeamputer/ch-flow:latest
+  mikeamputer/ch-flow:latest
 ``` 
 
 PowerShell:
@@ -28,14 +28,14 @@ docker run -d -p 3000:3000 `
   -e CHF_DB_USERNAME="developer" `
   -e CHF_DB_PASSWORD="developer" `
   -e CHF_DB_NAME="my_db" `
-  ghcr.io/mikeamputer/ch-flow:latest
+  mikeamputer/ch-flow:latest
 ```
 
 Docker Compose:
 ```yaml
 services:
   ch-flow:
-    image: ghcr.io/mikeamputer/ch-flow:latest
+    image: mikeamputer/ch-flow:latest
     environment:
       CHF_DB_URL: "http://clickhouse:8123"
       CHF_DB_USERNAME: "developer"
@@ -46,6 +46,8 @@ services:
 ```
 
 You can customize behavior using [environment variables](https://github.com/MikeAmputer/clickhouse-flow/wiki/Environment-Variables) or mounting a custom [config file](https://github.com/MikeAmputer/clickhouse-flow/wiki/Config-File).
+
+Image is also available at GHCR: `ghcr.io/mikeamputer/ch-flow:latest`
 
 ## Demo
 
