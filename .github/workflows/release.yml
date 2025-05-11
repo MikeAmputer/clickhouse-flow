@@ -31,13 +31,29 @@ jobs:
         echo "NAMESPACE=$NAMESPACE" >> "$GITHUB_ENV"
         echo "Namespace: $NAMESPACE"
 
-    - name: Validate version tag does not exist on GHCR
+    - name: Check if image tag exists on GHCR
       run: |
+        EXISTS_GHCR=false
         if docker manifest inspect ghcr.io/${{ env.NAMESPACE }}/${{ env.IMAGE_NAME }}:${{ env.VERSION }}; then
-          echo "$NAMESPACE/$IMAGE_NAME image tag $VERSION already exists on GHCR."
+          echo "$NAMESPACE/$IMAGE_NAME image tag $VERSION exists on GHCR"
+          EXISTS_GHCR=true
+        fi
+        echo "EXISTS_GHCR=$EXISTS_GHCR" >> $GITHUB_ENV
+
+    - name: Check if image tag exists on Docker Hub
+      run: |
+        EXISTS_DOCKERHUB=false
+        if docker manifest inspect docker.io/${{ env.NAMESPACE }}/${{ env.IMAGE_NAME }}:${{ env.VERSION }}; then
+          echo "$NAMESPACE/$IMAGE_NAME image tag $VERSION exists on Docker Hub"
+          EXISTS_DOCKERHUB=true
+        fi
+        echo "EXISTS_DOCKERHUB=$EXISTS_DOCKERHUB" >> $GITHUB_ENV
+
+    - name: Fail if both DockerHub and GHCR images exist
+      run: |
+        if [ "$EXISTS_GHCR" = "true" ] && [ "$EXISTS_DOCKERHUB" = "true" ]; then
+          echo "Both DockerHub and GHCR image tags exist. Failing the pipeline."
           exit 1
-        else
-          echo "$NAMESPACE/$IMAGE_NAME image tag $VERSION does not exist yet."
         fi
 
     - name: Build docker image
@@ -48,14 +64,28 @@ jobs:
       run: |
         docker tag ${{ env.IMAGE_NAME }}:current ghcr.io/${{ env.NAMESPACE }}/${{ env.IMAGE_NAME }}:latest
         docker tag ${{ env.IMAGE_NAME }}:current ghcr.io/${{ env.NAMESPACE }}/${{ env.IMAGE_NAME }}:${{ env.VERSION }}
+        docker tag ${{ env.IMAGE_NAME }}:current ${{ env.NAMESPACE }}/${{ env.IMAGE_NAME }}:latest
+        docker tag ${{ env.IMAGE_NAME }}:current ${{ env.NAMESPACE }}/${{ env.IMAGE_NAME }}:${{ env.VERSION }}
 
     - name: List local docker images
       run: docker images --format "table {{.Repository}}\t{{.Tag}}\t{{.ID}}\t{{.Size}}"
 
     - name: Login to GHCR
+      if: env.EXISTS_GHCR != 'true'
       run: echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
-    - name: Push to GHCR
+    - name: Push images to GHCR
+      if: env.EXISTS_GHCR != 'true'
       run: |
         docker push ghcr.io/${{ env.NAMESPACE }}/${{ env.IMAGE_NAME }}:latest
         docker push ghcr.io/${{ env.NAMESPACE }}/${{ env.IMAGE_NAME }}:${{ env.VERSION }}
+
+    - name: Login to Docker Hub
+      if: env.EXISTS_DOCKERHUB != 'true'
+      run: echo ${{ secrets.DOCKERHUB_TOKEN }} | docker login -u ${{ env.NAMESPACE }} --password-stdin
+
+    - name: Push images to Docker Hub
+      if: env.EXISTS_DOCKERHUB != 'true'
+      run: |
+        docker push ${{ env.NAMESPACE }}/${{ env.IMAGE_NAME }}:latest
+        docker push ${{ env.NAMESPACE }}/${{ env.IMAGE_NAME }}:${{ env.VERSION }}
