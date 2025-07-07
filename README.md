@@ -15,7 +15,7 @@ Web service for visualizing ClickHouse data flows. Primarily designed for develo
 </p>
 
 > [!Note]
-> This is unofficial tool.
+> This is an unofficial tool. 
 > ClickHouse is a registered trademark of ClickHouse, Inc. https://clickhouse.com
 
 ## Quick Setup
