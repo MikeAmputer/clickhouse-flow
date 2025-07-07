@@ -14,9 +14,10 @@ Web service for visualizing ClickHouse data flows. Primarily designed for develo
   <img src="https://github.com/user-attachments/assets/57b19456-3363-4c41-8306-2bf2ecc1e66f" alt="Example flow" width="75%"/>
 </p>
 
-> [!Note]
-> This is an unofficial tool. 
-> ClickHouse is a registered trademark of ClickHouse, Inc. https://clickhouse.com
+> [!NOTE]
+> This is an unofficial tool and is not affiliated with or endorsed by ClickHouse Inc.
+> 
+> "ClickHouse" is a registered trademark of ClickHouse Inc. — [clickhouse.com](https://clickhouse.com/)
 
 ## Quick Setup
 
