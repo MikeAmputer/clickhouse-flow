@@ -19,23 +19,22 @@ services:
       timeout: 3s
       retries: 10
 
-  ch-migrator:
-    image: alpine:3.21
-    container_name: ch-migrator
+  ch-migrate:
+    image: ghcr.io/mikeamputer/ch-migrate:0.2.0
+    container_name: ch-migrate
     environment:
-      - CLICKHOUSE_HOST=clickhouse
-      - CLICKHOUSE_PORT=8123
-      - CLICKHOUSE_USER=developer
-      - CLICKHOUSE_PASSWORD=developer
-      - CLICKHOUSE_DB=migrations
-      - MIGRATIONS_DIR=/migrations
+      - CH_MIGRATIONS_HOST=clickhouse
+      - CH_MIGRATIONS_PORT=8123
+      - CH_MIGRATIONS_USER=developer
+      - CH_MIGRATIONS_PASSWORD=developer
+      - CH_MIGRATIONS_DATABASE=migrations
+      - CH_MIGRATIONS_DIRECTORY=/migrations
     volumes:
       - ./migrations:/migrations
-      - ./run-migrations.sh:/run-migrations.sh
     depends_on:
       clickhouse:
         condition: service_healthy
-    command: sh -c "apk add --no-cache curl && sh /run-migrations.sh"
+    command: up
   
   ch-flow:
     image: ghcr.io/mikeamputer/ch-flow:latest
@@ -45,7 +44,7 @@ services:
     volumes:
       - ./ch-flow.config.json:/app/config/config.json
     depends_on:
-      ch-migrator:
+      ch-migrate:
         condition: service_completed_successfully
   
   devcontainer:
