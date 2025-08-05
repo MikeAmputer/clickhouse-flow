@@ -1,0 +1,36 @@
+name: ch-flow-dev
+
+services:
+  clickhouse:
+    image: clickhouse/clickhouse-server:latest
+    platform: linux/amd64
+    container_name: clickhouse-ch-flow-dev
+    restart: unless-stopped
+    environment:
+      - CLICKHOUSE_USER=developer
+      - CLICKHOUSE_PASSWORD=developer
+      - CLICKHOUSE_DB=flow_test
+    ports:
+      - "44123:8123"
+    healthcheck:
+      test: [ "CMD-SHELL", "clickhouse-client --query 'SELECT 1'" ]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  ch-migrate:
+    image: mikeamputer/ch-migrate:0.4.1
+    container_name: ch-migrate-ch-flow-dev
+    depends_on:
+      clickhouse:
+        condition: service_healthy
+    environment:
+      - CH_MIGRATIONS_HOST=clickhouse
+      - CH_MIGRATIONS_PORT=8123
+      - CH_MIGRATIONS_USER=developer
+      - CH_MIGRATIONS_PASSWORD=developer
+      - CH_MIGRATIONS_DATABASE=flow_test
+      - CH_MIGRATIONS_DIRECTORY=/migrations
+    volumes:
+      - ./migrations:/migrations
+    command: up

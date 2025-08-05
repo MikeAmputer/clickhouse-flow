@@ -44,6 +44,7 @@ export type ChTableProps = {
     sortingKey: string;
     primaryKey: string;
     samplingKey: string;
+    refreshable: string | null;
 }
 
 const ChTable: React.FC<ChTableProps> = (table) => {
@@ -104,6 +105,7 @@ const ChTable: React.FC<ChTableProps> = (table) => {
                         hasOwnData={table.hasOwnData}
                         hasEngineKeys={nonEmptyEngineKeys.length > 0}
                         openState={[engineOpen, setEngineOpen]}
+                        refreshable={table.refreshable}
                     />
 
                     <TableRow>

@@ -2,7 +2,8 @@ import React, { SetStateAction, Dispatch } from 'react';
 import { styled } from '@mui/material/styles';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-import { TableCell, TableRow, IconButton, } from '@mui/material';
+import { TableCell, TableRow, IconButton, Tooltip, } from '@mui/material';
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
 
 const padding = '3px';
 const horizontalPadding = '4px';
@@ -62,11 +63,19 @@ const ExpandButton = styled(IconButton)<EngineStyledProps>(({ hasowndata }) => (
     },
 }));
 
+const RefreshableIcon = styled(AccessTimeIcon)<EngineStyledProps>(({ hasowndata }) => ({
+    height: 20,
+    width: 20,
+    color: '#ddd',
+    marginRight: 2,
+}));
+
 export type ChEngineHeaderProps = {
     engineName: string;
     hasOwnData: boolean;
     hasEngineKeys: boolean;
     openState: [boolean, Dispatch<SetStateAction<boolean>>];
+    refreshable: string | null;
 };
 
 const ChEngineHeader: React.FC<ChEngineHeaderProps> = (props) => {
@@ -88,9 +97,11 @@ const ChEngineHeader: React.FC<ChEngineHeaderProps> = (props) => {
                     >
                         {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
                     </ExpandButton>
-                ) : (
-                    <></>
-                )}
+                ) : props.refreshable ? (
+                    <Tooltip title={`${props.refreshable}`}>
+                        <RefreshableIcon fontSize="small" sx={{ cursor: 'help' }} />
+                    </Tooltip>
+                ) : <></>}
             </ExpandCell>
         </EngineHeaderRow>
     );

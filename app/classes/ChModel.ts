@@ -11,7 +11,19 @@ export class ChModel {
 
         tables.forEach((table) => {
             const fullName = composeFullTableName(table.database, table.name);
-            this.tables.set(fullName, { fullName, table, columns: [] });
+
+            const refreshable = table.engine === "MaterializedView"
+                ? extractRefreshExpression(table.createCommand)
+                : null;
+
+            const entry: TableEntry = {
+                fullName,
+                table,
+                columns: [],
+                refreshable,
+            };
+
+            this.tables.set(fullName, entry);
         });
 
         columns.forEach((column) => {
@@ -47,6 +59,7 @@ type TableEntry = {
     fullName: string;
     table: ChTable;
     columns: ChColumn[];
+    refreshable: string | null;
 };
 
 type TableTransition = {
@@ -54,14 +67,14 @@ type TableTransition = {
     target: string;
 };
 
-const composeFullTableName = (database: string, table: string): string => {
+function composeFullTableName(database: string, table: string): string {
     return `${database}.${table}`;
 };
 
-const composeTransitions = (
+function composeTransitions(
     createCommand: string,
     fullName: string,
-    respectJoins: boolean = false): TableTransition[] => {
+    respectJoins: boolean = false): TableTransition[] {
 
     const toRegex = /TO\s+(?:`([^`]+)`|([a-zA-Z0-9_]+))\.(?:`([^`]+)`|([a-zA-Z0-9_]+))\s+/gi;
     const fromRegex = /FROM\s+(?:`([^`]+)`|([a-zA-Z0-9_]+))\.(?:`([^`]+)`|([a-zA-Z0-9_]+))(?:\s+|$)/gi;
@@ -89,11 +102,11 @@ const composeTransitions = (
     return result;
 };
 
-const matchTransitions = (
+function matchTransitions(
     createCommand: string,
     fullName: string,
     isSource: boolean,
-    regex: RegExp): TableTransition[] => {
+    regex: RegExp): TableTransition[] {
 
     const result: TableTransition[] = [];
 
@@ -120,3 +133,42 @@ const matchTransitions = (
 
     return result;
 };
+
+/**
+ * @internal
+ * internal for tests
+ */
+export function extractRefreshExpression(createCommand: string): string | null {
+    const regex = /REFRESH\s+EVERY\s+((?:\d+\s+\w+\s*)+)/i;
+
+    const refreshMatch = createCommand.match(regex);
+    if (!refreshMatch) return null;
+
+    const refreshExpr = refreshMatch[1].trim();
+    const parts = refreshExpr.split(/\s+/);
+
+    for (let i = 0; i < parts.length; i += 2) {
+        const value = parts[i];
+        const unit = parts[i + 1]?.toUpperCase();
+
+        if (!/^\d+$/.test(value) || !supportedIntervals.has(unit.toUpperCase())) {
+            return null;
+        }
+    }
+
+    return `REFRESH EVERY ${parts.map(p => p.toUpperCase()).join(' ')}`;
+};
+
+const supportedIntervals = new Set([
+    "NANOSECOND", "NANOSECONDS",
+    "MICROSECOND", "MICROSECONDS",
+    "MILLISECOND", "MILLISECONDS",
+    "SECOND", "SECONDS",
+    "MINUTE", "MINUTES",
+    "HOUR", "HOURS",
+    "DAY", "DAYS",
+    "WEEK", "WEEKS",
+    "MONTH", "MONTHS",
+    "QUARTER", "QUARTERS",
+    "YEAR", "YEARS",
+]);

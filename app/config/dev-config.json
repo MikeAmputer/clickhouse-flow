@@ -5,7 +5,7 @@
       "name": "flow_test",
       "config": {
         "connectionSettings": {
-          "url": "http://localhost:48123",
+          "url": "http://localhost:44123",
           "username": "developer",
           "password": "developer"
         },
