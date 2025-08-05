@@ -10,3 +10,7 @@ LICENSE
 .vscode
 .github
 .devcontainer
+jest.config.ts
+
+dev/
+__tests__/
