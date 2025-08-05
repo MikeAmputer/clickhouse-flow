@@ -16,7 +16,7 @@ ENGINE = MergeTree()
 ORDER BY input_id;
 
 CREATE MATERIALIZED VIEW IF NOT EXISTS refreshable_input_mv
-REFRESH EVERY 1 MINUTE
+REFRESH EVERY 1 HOUR 30 MINUTES
 TO refreshable_transformed_data
 AS
 SELECT
