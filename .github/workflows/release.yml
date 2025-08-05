@@ -11,17 +11,42 @@ env:
   IMAGE_NAME: ch-flow
 
 jobs:
-  build-and-push:
-    name: Build and Push
+  test:
+    name: Run Unit Tests
     runs-on: ubuntu-latest
 
     steps:
     - name: Checkout
       uses: actions/checkout@v4
 
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '24'
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Run unit tests with Jest
+      run: npm test
+
+  build-and-push:
+    name: Build and Push
+    runs-on: ubuntu-latest
+    needs: test
+
+    outputs:
+      version: ${{ steps.extract_version.outputs.version }}
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
     - name: Extract version from package.json
+      id: extract_version
       run: |
         VERSION=$(jq -r .version package.json)
+        echo "version=$VERSION" >> "$GITHUB_OUTPUT"
         echo "VERSION=$VERSION" >> "$GITHUB_ENV"
         echo "Version extracted from package.json: $VERSION"
 
@@ -75,7 +100,7 @@ jobs:
       run: echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
     - name: Push images to GHCR
-      if: env.EXISTS_GHCR != 'true'
+      if: env.EXISTS_GHCR != 'true' && false
       run: |
         docker push ghcr.io/${{ env.NAMESPACE }}/${{ env.IMAGE_NAME }}:latest
         docker push ghcr.io/${{ env.NAMESPACE }}/${{ env.IMAGE_NAME }}:${{ env.VERSION }}
@@ -85,7 +110,22 @@ jobs:
       run: echo ${{ secrets.DOCKERHUB_TOKEN }} | docker login -u ${{ env.NAMESPACE }} --password-stdin
 
     - name: Push images to Docker Hub
-      if: env.EXISTS_DOCKERHUB != 'true'
+      if: env.EXISTS_DOCKERHUB != 'true' && false
       run: |
         docker push ${{ env.NAMESPACE }}/${{ env.IMAGE_NAME }}:latest
         docker push ${{ env.NAMESPACE }}/${{ env.IMAGE_NAME }}:${{ env.VERSION }}
+
+  create-release:
+    name: Create GitHub Release
+    runs-on: ubuntu-latest
+    needs: build-and-push
+
+    steps:
+    - name: Create GitHub Release
+      uses: ncipollo/release-action@v1
+      with:
+        tag: "${{ needs.build-and-push.outputs.version }}"
+        token: ${{ secrets.RELEASE_GITHUB_TOKEN }}
+        generateReleaseNotes: true
+        draft: true
+        prerelease: false
