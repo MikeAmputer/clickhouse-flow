@@ -79,6 +79,7 @@ export default function Home() {
             sortingKey: table.sortingKey,
             partitionKey: table.partitionKey,
             samplingKey: table.samplingKey,
+            refreshable: entry.refreshable,
           },
         }
       });
