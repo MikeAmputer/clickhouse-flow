@@ -1,5 +1,6 @@
 # ch-flow
 
+[![GitHub release](https://img.shields.io/github/v/release/MikeAmputer/clickhouse-flow)](https://github.com/MikeAmputer/clickhouse-flow/releases)
 [![Docker](https://img.shields.io/badge/docker-ch--flow-blue?logo=docker)](https://hub.docker.com/r/mikeamputer/ch-flow)
 [![GHCR](https://img.shields.io/badge/ghcr.io-ch--flow-blue?logo=github)](https://github.com/MikeAmputer/clickhouse-flow/pkgs/container/ch-flow)
 [![Wiki](https://img.shields.io/badge/wiki-docs-lightgrey?logo=github)](https://github.com/MikeAmputer/clickhouse-flow/wiki)
