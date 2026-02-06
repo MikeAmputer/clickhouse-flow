@@ -80,6 +80,7 @@ export default function Home() {
             partitionKey: table.partitionKey,
             samplingKey: table.samplingKey,
             refreshable: entry.refreshable,
+            asSelect: table.asSelect,
           },
         }
       });

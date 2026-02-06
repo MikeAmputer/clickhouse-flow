@@ -4,6 +4,7 @@ import ChColumn, { ChColumnProps } from './ChColumn';
 import ChEngineRow from './ChEngineRow';
 import ChTableHeader from './ChTableHeader';
 import ChEngineHeader from './ChEngineHeader';
+import AsSelectTableInfo from './AsSelectTableInfo';
 
 import {
     Table,
@@ -45,6 +46,7 @@ export type ChTableProps = {
     primaryKey: string;
     samplingKey: string;
     refreshable: string | null;
+    asSelect: string | null;
 }
 
 const ChTable: React.FC<ChTableProps> = (table) => {
@@ -82,8 +84,14 @@ const ChTable: React.FC<ChTableProps> = (table) => {
                                         style={{ borderCollapse: 'collapse', borderSpacing: 0, }}
                                     >
                                         <TableBody>
-                                            {table.columns.map((column) => (
-                                                <ChColumn key={`${table.fullName}_${column.position}`} {...column} />
+                                            {isMatView && table.asSelect != null
+                                                ? <AsSelectTableInfo
+                                                    key={`${table.fullName}_asSelect`}
+                                                    asSelect={table.asSelect}/>
+                                                : table.columns.map((column) => (
+                                                    <ChColumn
+                                                        key={`${table.fullName}_${column.position}`}
+                                                        {...column} />
                                             ))}
                                         </TableBody>
                                     </Table>
