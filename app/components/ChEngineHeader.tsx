@@ -91,7 +91,7 @@ const ChEngineHeader: React.FC<ChEngineHeaderProps> = (props) => {
                     <ExpandButton
                         export-hide='true'
                         hasowndata={props.hasOwnData}
-                        aria-label={'expand table'}
+                        aria-label={'expand-table'}
                         size={'small'}
                         onClick={() => setOpen(!open)}
                     >

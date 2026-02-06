@@ -48,7 +48,9 @@ export type ChTableProps = {
 }
 
 const ChTable: React.FC<ChTableProps> = (table) => {
-    const [columnsOpen, setColumnsOpen] = useState(table.engine !== 'MaterializedView');
+    const isMatView = table.engine === 'MaterializedView'
+
+    const [columnsOpen, setColumnsOpen] = useState(!isMatView);
     const [engineOpen, setEngineOpen] = useState(false);
 
     const engineKeys: [name: string, value: string][] = [
@@ -76,7 +78,7 @@ const ChTable: React.FC<ChTableProps> = (table) => {
                                 <Box>
                                     <Table
                                         size='small'
-                                        aria-label='engine'
+                                        aria-label='table-info'
                                         style={{ borderCollapse: 'collapse', borderSpacing: 0, }}
                                     >
                                         <TableBody>
@@ -114,7 +116,7 @@ const ChTable: React.FC<ChTableProps> = (table) => {
                                 <Box>
                                     <Table
                                         size='small'
-                                        aria-label='engine'
+                                        aria-label='engine-info'
                                         style={{ borderCollapse: 'collapse', borderSpacing: 0, }}
                                     >
                                         <TableBody>
@@ -132,6 +134,7 @@ const ChTable: React.FC<ChTableProps> = (table) => {
                             </Collapse>
                         </TableCell>
                     </TableRow>
+
                 </TableBody>
             </StyledTable>
         </TableContainer>
