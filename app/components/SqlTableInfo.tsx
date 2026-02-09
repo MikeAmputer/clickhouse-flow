@@ -18,18 +18,18 @@ const StyledTableCell = styled(TableCell)(() => ({
     lineHeight: '1.3',
 }));
 
-export type AsSelectTableInfoProps = {
-    asSelect: string;
+export type SqlTableInfoProps = {
+    sqlText: string;
 };
 
-const AsSelectTableInfo: React.FC<AsSelectTableInfoProps> = (props) => {
+const SqlTableInfo: React.FC<SqlTableInfoProps> = (props) => {
     return (
         <StyledTableRow export-trim='true'>
             <StyledTableCell export-trim='true' sql-text='true'>
-                {props.asSelect}
+                {props.sqlText}
             </StyledTableCell>
         </StyledTableRow>
     );
 };
 
-export default AsSelectTableInfo;
+export default SqlTableInfo;

@@ -4,7 +4,7 @@ import ChColumn, { ChColumnProps } from './ChColumn';
 import ChEngineRow from './ChEngineRow';
 import ChTableHeader from './ChTableHeader';
 import ChEngineHeader from './ChEngineHeader';
-import AsSelectTableInfo from './AsSelectTableInfo';
+import SqlTableInfo from './SqlTableInfo';
 import { MaterializedViewsConfig } from '../config';
 
 import {
@@ -48,12 +48,26 @@ export type ChTableProps = {
     samplingKey: string;
     refreshable: string | null;
     asSelect: string | null;
+    createCommand: string;
     materializedViewsConfig: MaterializedViewsConfig;
 }
 
 const ChTable: React.FC<ChTableProps> = (table) => {
     const isMatView = table.engine === 'MaterializedView'
     const matViewRenderMode = table.materializedViewsConfig.renderMode;
+    let sqlText: string | null = null;
+
+    if (isMatView) {
+        switch (matViewRenderMode) {
+            case 'AS_SELECT':
+            sqlText = table.asSelect;
+            break;
+
+            case 'CREATE_COMMAND':
+            sqlText = table.createCommand;
+            break;
+        }
+    }
 
     const [columnsOpen, setColumnsOpen] = useState(!isMatView);
     const [engineOpen, setEngineOpen] = useState(false);
@@ -87,10 +101,10 @@ const ChTable: React.FC<ChTableProps> = (table) => {
                                         style={{ borderCollapse: 'collapse', borderSpacing: 0, }}
                                     >
                                         <TableBody>
-                                            {isMatView && matViewRenderMode == 'AS_SELECT' && table.asSelect != null
-                                                ? <AsSelectTableInfo
-                                                    key={`${table.fullName}_asSelect`}
-                                                    asSelect={table.asSelect}/>
+                                            {sqlText != null
+                                                ? <SqlTableInfo
+                                                        key={`${table.fullName}_sql`}
+                                                        sqlText={sqlText}/>
                                                 : table.columns.map((column) => (
                                                     <ChColumn
                                                         key={`${table.fullName}_${column.position}`}

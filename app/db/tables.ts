@@ -22,6 +22,7 @@ export const getTables = async (client: ClickHouseClient, databases: string[]): 
 
     return tables.map((table) => ({
         ...table,
+        createCommand: formatSql(table.createCommand)!,
         asSelect: formatSql(table.asSelect),
   }));
 };
