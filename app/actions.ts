@@ -5,7 +5,8 @@ import {
   getDatabaseConfigs,
   DatabaseConfig,
   ExportConfig,
-  CanvasConfig
+  CanvasConfig,
+  MaterializedViewsConfig
 } from '@/app/config';
 
 import { createClient } from '@/app/db';
@@ -46,6 +47,7 @@ export async function getDatabaseInfo(configName: string): Promise<DatabaseInfo>
 export interface AppSettings {
   exportConfig: ExportConfig;
   canvasConfig: CanvasConfig;
+  materializedViewsConfig: MaterializedViewsConfig;
 }
 
 export async function getAppSettings(): Promise<AppSettings> {
@@ -53,5 +55,6 @@ export async function getAppSettings(): Promise<AppSettings> {
   return {
     exportConfig: config.exportConfig,
     canvasConfig: config.canvasConfig,
+    materializedViewsConfig: config.materializedViewsConfig,
   }
 }

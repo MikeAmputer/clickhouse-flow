@@ -2,6 +2,10 @@ import { elementToSVG } from "dom-to-svg";
 import jsPDF from "jspdf";
 import { svg2pdf } from "svg2pdf.js";
 
+const jbMonoRegularFamily = 'JetBrainsMonoRegular';
+const jbMonoRegularPath = '/fonts/JetBrainsMono-Regular.ttf';
+const jbMonoRegularFileName = 'JetBrainsMono-Regular.ttf';
+
 function fetchCSS(): string {
   let css = "";
   for (const sheet of Array.from(document.styleSheets)) {
@@ -70,6 +74,11 @@ export const exportReactFlow = async (width: number, height: number, dbConfigNam
   const iframeDocument = iframe.contentDocument;
   if (!iframeDocument) throw new Error("Could not get iframe document");
 
+  await ensureFontLoaded(jbMonoRegularFamily, jbMonoRegularPath);
+  injectFontFaceIntoIframe(iframeDocument, jbMonoRegularFamily, jbMonoRegularPath);
+  await iframeDocument.fonts.ready;
+  await ensureFontLoaded(jbMonoRegularFamily, jbMonoRegularPath);
+
   const iframeStyle = iframeDocument.createElement("style");
   iframeStyle.innerHTML = fetchCSS();
   iframeDocument.head.append(iframeStyle);
@@ -92,12 +101,49 @@ export const exportReactFlow = async (width: number, height: number, dbConfigNam
     el.style.borderTopWidth = '0px';
   });
 
+  const sqlTextCells = clone.querySelectorAll('[sql-text="true"]');
+  sqlTextCells.forEach((cell) => {
+    const el = cell as HTMLElement;
+
+    el.style.fontFamily = jbMonoRegularFamily;
+    el.style.fontSize = "12.8px";
+
+    const text = el.textContent || "";
+
+    const html = text
+      .split("\n")
+      .map((line) => {
+        const leading = line.match(/^\s+/)?.[0] ?? "";
+        const rest = line.slice(leading.length);
+
+        const escapedRest = rest
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;");
+
+        const escapedLeading = leading
+          .replace(/\t/g, "  ")
+          .replace(/ /g, "&nbsp;");
+
+        return escapedLeading + escapedRest;
+      })
+      .join("<br/>");
+
+    el.innerHTML = html;
+  });
+
   const originalTransform = getComputedStyle(container).transform;
   clone.style.transform = originalTransform;
   iframeDocument.body.append(clone);
   inlineEdgeStyles(clone);
 
   const svgDocument = elementToSVG(iframeDocument.documentElement);
+
+  const svgRoot = svgDocument.documentElement as unknown as SVGElement;
+
+  const jbMonoRegularBase64 = await loadFont(jbMonoRegularPath);
+  injectFontIntoSvg(svgRoot, jbMonoRegularBase64, jbMonoRegularFamily);
+
   const svgString = new XMLSerializer().serializeToString(svgDocument);
 
   if (format === 'SVG') {
@@ -117,6 +163,10 @@ export const exportReactFlow = async (width: number, height: number, dbConfigNam
       format: [width, height],
     });
 
+    pdf.addFileToVFS(jbMonoRegularFileName, jbMonoRegularBase64);
+    pdf.addFont(jbMonoRegularFileName, jbMonoRegularFamily, "normal");
+    pdf.setFont(jbMonoRegularFamily);
+
     const parser = new DOMParser();
     const svgElement = parser.parseFromString(svgString, "image/svg+xml").documentElement;
 
@@ -132,3 +182,57 @@ export const exportReactFlow = async (width: number, height: number, dbConfigNam
 
   setTimeout(() => iframe.remove(), 1000);
 };
+
+function injectFontIntoSvg(svg: SVGElement, base64Font: string, fontFamily: string) {
+  const style = document.createElementNS("http://www.w3.org/2000/svg", "style");
+
+  style.textContent = `
+@font-face {
+  font-family: "${fontFamily}";
+  src: url("data:font/truetype;base64,${base64Font}") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+`;
+
+  svg.insertBefore(style, svg.firstChild);
+}
+
+async function loadFont(url: string): Promise<string> {
+  const res = await fetch(url);
+  const buffer = await res.arrayBuffer();
+
+  let binary = "";
+  const bytes = new Uint8Array(buffer);
+  const chunkSize = 0x8000;
+
+  for (let i = 0; i < bytes.length; i += chunkSize) {
+    binary += String.fromCharCode(...bytes.subarray(i, i + chunkSize));
+  }
+
+  return btoa(binary);
+}
+
+async function ensureFontLoaded(fontFamily: string, fontPath: string) {
+  const font = new FontFace(
+    fontFamily,
+    `url(${fontPath})`
+  );
+
+  await font.load();
+  document.fonts.add(font);
+  await document.fonts.ready;
+}
+
+function injectFontFaceIntoIframe(doc: Document, fontFamily: string, fontPath: string) {
+  const style = doc.createElement("style");
+  style.textContent = `
+    @font-face {
+      font-family: ${fontFamily};
+      src: url("${fontPath}") format("truetype");
+      font-weight: normal;
+      font-style: normal;
+    }
+  `;
+  doc.head.appendChild(style);
+}

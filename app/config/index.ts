@@ -7,6 +7,7 @@ export interface ConfigFile {
   databaseConfigs: DatabaseConfigEntry[];
   exportConfig: ExportConfig;
   canvasConfig: CanvasConfig;
+  materializedViewsConfig: MaterializedViewsConfig;
 }
 
 export interface DatabaseConfigEntry {
@@ -33,6 +34,10 @@ export interface CanvasConfig {
   autoFitView: boolean;
 }
 
+export interface MaterializedViewsConfig {
+  renderMode: 'ROWS' | 'AS_SELECT' | 'CREATE_COMMAND';
+}
+
 const defaultConfig: ConfigFile =
 {
   databaseConfigs: [],
@@ -46,6 +51,9 @@ const defaultConfig: ConfigFile =
     backgroundColor: "#e0e0dc",
     autoFitView: true,
   },
+  materializedViewsConfig: {
+    renderMode: 'AS_SELECT'
+  }
 };
 
 function loadConfigFile(): ConfigFile | null {
@@ -131,6 +139,12 @@ function substituteEnv(config: ConfigFile) {
   config.canvasConfig.autoFitView = ENV.CHF_CANVAS_AUTO_FIT_VIEW
     ?? config.canvasConfig.autoFitView
     ?? defaultConfig.canvasConfig.autoFitView;
+
+  config.materializedViewsConfig ??= { ...defaultConfig.materializedViewsConfig };
+
+  config.materializedViewsConfig.renderMode = ENV.CHF_MAT_VIEWS_RENDER_MODE
+    ?? config.materializedViewsConfig.renderMode
+    ?? defaultConfig.materializedViewsConfig.renderMode;
 }
 
 let cachedConfig: ConfigFile | null = null;

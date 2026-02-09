@@ -25,5 +25,7 @@ export const ENV = parseEnv(process.env, {
     })
     .optional(),
 
+  CHF_MAT_VIEWS_RENDER_MODE: z.enum(['ROWS', 'AS_SELECT', 'CREATE_COMMAND']).optional(),
+
   NODE_ENV: z.enum(['development', 'production', 'test']),
 });
