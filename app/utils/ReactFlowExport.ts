@@ -2,6 +2,10 @@ import { elementToSVG } from "dom-to-svg";
 import jsPDF from "jspdf";
 import { svg2pdf } from "svg2pdf.js";
 
+const jbMonoRegularFamily = 'JetBrainsMonoRegular';
+const jbMonoRegularPath = '/fonts/JetBrainsMono-Regular.ttf';
+const jbMonoRegularFileName = 'JetBrainsMono-Regular.ttf';
+
 function fetchCSS(): string {
   let css = "";
   for (const sheet of Array.from(document.styleSheets)) {
@@ -70,10 +74,10 @@ export const exportReactFlow = async (width: number, height: number, dbConfigNam
   const iframeDocument = iframe.contentDocument;
   if (!iframeDocument) throw new Error("Could not get iframe document");
 
-  await ensureFontLoaded();
-  injectFontFaceIntoIframe(iframeDocument);
+  await ensureFontLoaded(jbMonoRegularFamily, jbMonoRegularPath);
+  injectFontFaceIntoIframe(iframeDocument, jbMonoRegularFamily, jbMonoRegularPath);
   await iframeDocument.fonts.ready;
-  await ensureFontLoaded();
+  await ensureFontLoaded(jbMonoRegularFamily, jbMonoRegularPath);
 
   const iframeStyle = iframeDocument.createElement("style");
   iframeStyle.innerHTML = fetchCSS();
@@ -101,7 +105,7 @@ export const exportReactFlow = async (width: number, height: number, dbConfigNam
   sqlTextCells.forEach((cell) => {
     const el = cell as HTMLElement;
 
-    el.style.fontFamily = "JetBrainsMonoRegular";
+    el.style.fontFamily = jbMonoRegularFamily;
     el.style.fontSize = "12.8px";
 
     const text = el.textContent || "";
@@ -137,8 +141,8 @@ export const exportReactFlow = async (width: number, height: number, dbConfigNam
 
   const svgRoot = svgDocument.documentElement as unknown as SVGElement;
 
-  const fontBase64 = await loadFont("/fonts/JetBrainsMono-Regular.ttf");
-  injectFontIntoSvg(svgRoot, fontBase64, 'JetBrainsMonoRegular');
+  const jbMonoRegularBase64 = await loadFont(jbMonoRegularPath);
+  injectFontIntoSvg(svgRoot, jbMonoRegularBase64, jbMonoRegularFamily);
 
   const svgString = new XMLSerializer().serializeToString(svgDocument);
 
@@ -159,11 +163,9 @@ export const exportReactFlow = async (width: number, height: number, dbConfigNam
       format: [width, height],
     });
 
-    const font = await loadFont("/fonts/JetBrainsMono-Regular.ttf");
-
-    pdf.addFileToVFS("JetBrainsMono-Regular.ttf", font);
-    pdf.addFont("JetBrainsMono-Regular.ttf", "JetBrainsMonoRegular", "normal");
-    pdf.setFont("JetBrainsMonoRegular");
+    pdf.addFileToVFS(jbMonoRegularFileName, jbMonoRegularBase64);
+    pdf.addFont(jbMonoRegularFileName, jbMonoRegularFamily, "normal");
+    pdf.setFont(jbMonoRegularFamily);
 
     const parser = new DOMParser();
     const svgElement = parser.parseFromString(svgString, "image/svg+xml").documentElement;
@@ -211,10 +213,10 @@ async function loadFont(url: string): Promise<string> {
   return btoa(binary);
 }
 
-async function ensureFontLoaded() {
+async function ensureFontLoaded(fontFamily: string, fontPath: string) {
   const font = new FontFace(
-    "JetBrainsMonoRegular",
-    "url(/fonts/JetBrainsMono-Regular.ttf)"
+    fontFamily,
+    `url(${fontPath})`
   );
 
   await font.load();
@@ -222,12 +224,12 @@ async function ensureFontLoaded() {
   await document.fonts.ready;
 }
 
-function injectFontFaceIntoIframe(doc: Document) {
+function injectFontFaceIntoIframe(doc: Document, fontFamily: string, fontPath: string) {
   const style = doc.createElement("style");
   style.textContent = `
     @font-face {
-      font-family: "JetBrainsMonoRegular";
-      src: url("/fonts/JetBrainsMono-Regular.ttf") format("truetype");
+      font-family: ${fontFamily};
+      src: url("${fontPath}") format("truetype");
       font-weight: normal;
       font-style: normal;
     }
