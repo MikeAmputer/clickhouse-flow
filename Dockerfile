@@ -26,6 +26,7 @@ COPY --from=base /usr/lib /usr/lib
 # Copy app
 COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
+COPY --from=builder /app/public ./public
 
 # Create and use non-root user
 RUN addgroup -g 1001 nodejs && adduser -S -u 1001 -G nodejs nextjs
