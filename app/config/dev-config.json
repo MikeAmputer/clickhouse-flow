@@ -26,5 +26,9 @@
     "gridSize": 15,
     "backgroundColor": "#e0e0dc",
     "autoFitView": true
+  },
+  "materializedViewsConfig":
+  {
+    "renderMode": "AS_SELECT"
   }
 }

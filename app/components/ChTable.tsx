@@ -5,6 +5,7 @@ import ChEngineRow from './ChEngineRow';
 import ChTableHeader from './ChTableHeader';
 import ChEngineHeader from './ChEngineHeader';
 import AsSelectTableInfo from './AsSelectTableInfo';
+import { MaterializedViewsConfig } from '../config';
 
 import {
     Table,
@@ -47,10 +48,12 @@ export type ChTableProps = {
     samplingKey: string;
     refreshable: string | null;
     asSelect: string | null;
+    materializedViewsConfig: MaterializedViewsConfig;
 }
 
 const ChTable: React.FC<ChTableProps> = (table) => {
     const isMatView = table.engine === 'MaterializedView'
+    const matViewRenderMode = table.materializedViewsConfig.renderMode;
 
     const [columnsOpen, setColumnsOpen] = useState(!isMatView);
     const [engineOpen, setEngineOpen] = useState(false);
@@ -84,7 +87,7 @@ const ChTable: React.FC<ChTableProps> = (table) => {
                                         style={{ borderCollapse: 'collapse', borderSpacing: 0, }}
                                     >
                                         <TableBody>
-                                            {isMatView && table.asSelect != null
+                                            {isMatView && matViewRenderMode == 'AS_SELECT' && table.asSelect != null
                                                 ? <AsSelectTableInfo
                                                     key={`${table.fullName}_asSelect`}
                                                     asSelect={table.asSelect}/>

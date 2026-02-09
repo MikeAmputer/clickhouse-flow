@@ -81,6 +81,7 @@ export default function Home() {
             samplingKey: table.samplingKey,
             refreshable: entry.refreshable,
             asSelect: table.asSelect,
+            materializedViewsConfig: appSettings.materializedViewsConfig
           },
         }
       });
