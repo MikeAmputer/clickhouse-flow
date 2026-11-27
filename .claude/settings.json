@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm test:*)",
+      "Bash(npm run lint:*)",
+      "Bash(npm run format:check:*)",
+      "Bash(npm run typecheck:*)",
+      "Bash(npx tsc --noEmit:*)"
+    ],
+    "deny": [
+      "Read(./package-lock.json)",
+      "Read(./.next/**)",
+      "Read(./.swc/**)",
+      "Read(./node_modules/**)"
+    ]
+  }
+}
